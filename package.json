@@ -1,5 +1,6 @@
 {
-  "name": "web-app",
+  "name": "student_tracker",
+  "homepage": "https://ohspstudentracker-online.preview-domain.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -10,7 +10,7 @@ const LoginView = () => {
         <div className='h-screen w-screen flex justify-center'>
             {contextHolder}
             <Form 
-                className='w-1/3 m-auto shadow-xl rounded-md bg-green-300 p-10'
+                className=' m-auto shadow-xl rounded-md bg-green-300 p-10'
                 labelAlign="right"
                 initialValues={
                     {remember: true}
