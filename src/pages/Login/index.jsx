@@ -9,7 +9,7 @@ const Login = () => {
 
     const handleSubmit = async(e) => {
       const payload = {
-        email: e.email,
+        schoolId: e.schoolId,
         password: e.password,
       };
       try {

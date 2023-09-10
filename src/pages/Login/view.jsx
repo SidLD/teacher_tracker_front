@@ -17,7 +17,7 @@ const LoginView = () => {
                 }
                 onFinish={handleSubmit}
             >
-                <Form.Item label="Email" name="email"
+                <Form.Item label="School ID" name="schoolId"
                     rules={
                         [{
                                 required: true,

@@ -3,6 +3,7 @@ import { PageContext } from '../../lib/PageContext'
 import { MasterListView } from './view'
 import { getCategory, getUser, getUserStatus, getUsers } from '../../lib/api'
 import { Button } from 'antd'
+import { auth } from '../../lib/services'
 
 export const MasterList = () => {
   const [users, setUsers] = useState([])
@@ -58,7 +59,7 @@ export const MasterList = () => {
     try {
       const result = await getUsers(
           { 
-            role: "student", 
+            role: auth.role === "superadmin" ? "admin" : "student", 
             currentStatus: currentStatus, 
             search: query, 
             start, 
