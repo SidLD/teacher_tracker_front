@@ -59,7 +59,7 @@ export const MasterList = () => {
     try {
       const result = await getUsers(
           { 
-            role: auth.role === "superadmin" ? "admin" : "student", 
+            role: auth.role === "superadmin" ? "teacher" : "student", 
             currentStatus: currentStatus, 
             search: query, 
             start, 

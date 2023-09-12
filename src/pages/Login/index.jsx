@@ -20,7 +20,7 @@ const Login = () => {
         password: e.password,
       };
       try {
-        alert('warning', "Logging In")
+        alert('info', "Logging In")
         const data = await login(payload)
         if(data.data.token){
           auth.storeToken(data.data.token)
