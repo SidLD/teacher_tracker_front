@@ -57,14 +57,15 @@ export const MasterList = () => {
   };
   const fetchUsers = async (query, currentStatus, start, limit) => {
     try {
-      const result = await getUsers(
-          { 
-            role: auth.role === "superadmin" ? "teacher" : "student", 
-            currentStatus: currentStatus, 
-            search: query, 
-            start, 
-            limit
-          })
+      const payload = { 
+        role: "student", 
+        currentStatus: currentStatus, 
+        search: query, 
+        start, 
+        limit
+      }
+
+      const result = await getUsers(payload)
       const tempUser = result.data.data.map((user, index) => {
         return {
           key: index,
