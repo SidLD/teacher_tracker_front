@@ -28,18 +28,6 @@ function RegisterView() {
                     onFinish={handleSubmit}
                     
                 >
-                    <Form.Item label="Student ID" name="schoolId"
-                        rules={
-                            [{
-                                    required: true,
-                                    message: "Please input your Student ID"
-                                },]
-                        }
-                        style={
-                            {width: "100%"}
-                    }>
-                        <Input/>
-                    </Form.Item>
                     <Form.Item label="Year Batch" name="batch"
                    
                     style={

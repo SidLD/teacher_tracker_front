@@ -9,7 +9,6 @@ export default function Register() {
   const [messageApi, contextHolder] = message.useMessage();
     const handleSubmit = async(e) => {
         const payload = {
-          schoolId: e.schoolId,
           password: e.password,
           email: e.email,
           firstName: e.firstName,

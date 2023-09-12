@@ -7,28 +7,30 @@ import LoginView from "./view";
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
+  const alert = (type, content) => {
+    messageApi.open({
+      type,
+      content,
+    });
+  };
+
     const handleSubmit = async(e) => {
       const payload = {
-        schoolId: e.schoolId,
+        email: e.email,
         password: e.password,
       };
       try {
+        alert('warning', "Logging In")
         const data = await login(payload)
         if(data.data.token){
           auth.storeToken(data.data.token)
           window.location.href = "/dashboard"
         }else{
-          warning(data.data)
+          alert('warning', data.data)
         }
       } catch (error) {
-        warning(error.response.data.data)
+        alert('warning',error.response.data.data)
       }
-    };
-    const warning = (data) => {
-      messageApi.open({
-        type: 'warning',
-        content: data,
-      });
     };
     const values = {
       handleSubmit,

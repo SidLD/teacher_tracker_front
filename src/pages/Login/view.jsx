@@ -17,11 +17,11 @@ const LoginView = () => {
                 }
                 onFinish={handleSubmit}
             >
-                <Form.Item label="School ID" name="schoolId"
+                <Form.Item label="Email" name="email"
                     rules={
                         [{
                                 required: true,
-                                message: "Please input your Student ID"
+                                message: "Please input your Email"
                             },]
                     }
                     style={
