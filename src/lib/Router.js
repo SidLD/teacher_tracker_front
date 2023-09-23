@@ -17,8 +17,8 @@ const routers = createBrowserRouter(
             <Route  path="/register" element={<Register/>} />      
         </Route>
         <Route element={<PrivateLayout/>}>
-            <Route  index path="/dashboard" element={<Dashboard/>} />
-            <Route  path="/setting" element={<Setting/>} />
+            <Route index path="/dashboard" element={<Dashboard/>} />
+            <Route path="/setting" element={<Setting/>} />
             <Route path="logout" element={<LogOut />} />
             {auth.getRole() !== "student" && <Route  path="/approve" element={<Approve/>} />}      
             {auth.getRole() !== "student" && <Route  path="/masterlist" element={<MasterList/>} />}  

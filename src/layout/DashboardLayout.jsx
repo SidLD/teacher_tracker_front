@@ -59,12 +59,15 @@ const RootLayout = () => {
   ];
 
   const [open, setOpen] = useState(false);
+  
   const showDrawer = () => {
     setOpen(true);
   };
+
   const onClose = () => {
     setOpen(false);
   };
+
   const fetchNotificationCount = async() => {
     try {
      const result = await getPendingUser()
@@ -74,9 +77,11 @@ const RootLayout = () => {
      setNotificationCount(0) 
     }
    }
+
   useEffect(() => {
     fetchNotificationCount()
   }, [])
+
   return (
      <div>
        <Header className="flex bg-green-900 text-gray-100 justify-between h-18 items-center">
@@ -88,7 +93,7 @@ const RootLayout = () => {
             <nav className="flex tablet-max:hidden">
               {items.map((item, index) => {
                 return (
-                  item.accounttype.includes(auth.getRole()) && 
+                  item.accounttype.includes(auth.getRole()) &&
                   <NavLink key={index} 
                     to={item.key}
                   className="p-1 h-10 flex items-center rounded-md hover:bg-green-200"

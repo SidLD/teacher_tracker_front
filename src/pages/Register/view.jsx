@@ -8,10 +8,10 @@ function RegisterView() {
     const {handleSubmit, contextHolder} = useContext(PageContext)
     const navigate = useNavigate()
     return (
-            <div className='h-screen w-screen flex justify-center'>
+            <div className='overflow-x-hidden h-screen w-screen flex justify-center'>
                 {contextHolder}
                 <Form 
-                    className='my-10 shadow-xl rounded-md bg-green-300 p-10'
+                    className='w-full h-fit flex flex-col my-10 shadow-xl rounded-md bg-green-300 p-10'
                     labelAlign="right"
                     style={{
                         maxWidth: 600,

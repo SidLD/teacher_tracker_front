@@ -8,3 +8,37 @@
     background-color: green;
     transition-delay: .4s;
 }
+
+.inp {
+    border:none !important;
+    border-bottom: 1px solid #1890ff;
+    padding: 5px 10px;
+    outline: none;
+ }
+ [placeholder]:focus::-webkit-input-placeholder {
+    transition: text-indent 0.4s 0.4s ease; 
+    text-indent: -100%;
+    opacity: 1;
+ }
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 25px;
+    margin-left: 3px;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #017528;
+    border-radius: 25px;
+}
+  
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #05ff2f;
+}

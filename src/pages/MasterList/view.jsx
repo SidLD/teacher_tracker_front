@@ -144,7 +144,6 @@ export const MasterListView = () => {
         <p className='font-semibold flex justify-between'>First Name: <span>{userData.firstName}</span></p>
         <p className='font-semibold flex justify-between'>Middle Name: <span>{userData.middleName}</span></p>
         <p className='font-semibold flex justify-between'>Last Name: <span>{userData.lastName}</span></p>
-        <p className='font-semibold flex justify-between'>Email: <span>{userData.email}</span></p>
         <p className='font-semibold flex justify-between'>Role: <span className='uppercase'>{userData.role}</span></p>
         <h3 className='mt-2'>Statuses</h3>
         <div className='flex my-2'>
