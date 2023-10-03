@@ -14,6 +14,8 @@ export const register = (data) => {
         });
     });
 };
+
+
 export const login = (data) => {
     return new Promise((resolve, reject) => {
       axios
@@ -82,6 +84,7 @@ export const getPendingUser = (data) => {
       });
   });
 };
+
 export const deleteUser = (data) => {
   return new Promise((resolve, reject) => {
     axios
@@ -223,6 +226,38 @@ export const getAnalysis = (data) => {
   return new Promise((resolve, reject) => {
     axios
       .get(process.env.REACT_APP_API_URL+"/analysis", {
+        params : data, 
+        ...dataHeader()
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const getStudentsCount = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(process.env.REACT_APP_API_URL+"/countStudents", {
+        params : data, 
+        ...dataHeader()
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const getBatches = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(process.env.REACT_APP_API_URL+"/batch", {
         params : data, 
         ...dataHeader()
       })

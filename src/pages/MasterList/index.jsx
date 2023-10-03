@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { PageContext } from '../../lib/PageContext'
 import { MasterListView } from './view'
-import { getCategory, getUser, getUserStatus, getUsers } from '../../lib/api'
-import { Button } from 'antd'
-import { auth } from '../../lib/services'
+import { getCategory, getUser, getUserStatus, getUsers , deleteUser as deleteUserAPI} from '../../lib/api'
+import { Button, message } from 'antd'
 
 export const MasterList = () => {
   const [users, setUsers] = useState([])
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState({})
+  const [deleteUser, setDeleteUser] = useState(null)
   const [loader, setloader] = useState(true)
   const [categories, setCategories] = useState([{name: ""}])
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const alert = (type, content) => {
+    messageApi.open({
+      type,
+      content,
+    });
+  };
+
 
   const dateFormat = (date) => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -24,6 +33,7 @@ export const MasterList = () => {
     }
     return data
   }
+
   const showDrawer = async (e) => {
     const result = await getUser({userId: e})
     const data = result.data.data
@@ -36,6 +46,7 @@ export const MasterList = () => {
     setUserData(data)
     setOpen(true);
   };
+  
   const fetchCategory = async (e) => {
     try {
         const res = await getCategory()
@@ -51,10 +62,12 @@ export const MasterList = () => {
       } catch (error) {
         return null
     }
-}
-  const onClose = () => {
+  }
+  
+const onClose = () => {
     setOpen(false);
   };
+
   const fetchUsers = async (query, currentStatus, start, limit) => {
     try {
       const payload = { 
@@ -74,9 +87,10 @@ export const MasterList = () => {
           firstName: user.firstName,
           middleName: user.middleName,
           batch: user.batch,
-          action: <Button
+          action: <div className='flex flex-row gap-3 justify-center'>
+          <Button
             style={
-                    {width: "50%",
+                    {width: "30%",
                     color: 'black',
                     border: '1px solid green'
                 }
@@ -86,6 +100,18 @@ export const MasterList = () => {
               showDrawer(user._id)
             }}  
           >View Data</Button>
+          <Button
+            style={
+                    {width: "30%",
+                    color: 'black',
+                }
+            }
+            className='active:text-gray-100 bg-red-500 '
+            onClick={() => {
+              setDeleteUser(user)
+            }}  
+          >Delete User</Button>
+          </div>
         }
       })
       setUsers(tempUser)
@@ -94,11 +120,30 @@ export const MasterList = () => {
     }
   }
 
+  const handleDeleteUser = async () => {
+    try {
+      const result = await deleteUserAPI(deleteUser)
+      
+      setDeleteUser(null)
+      if(result.data.data) {
+        alert('success', 'Success')
+        return true
+      }else{
+        alert('warning', 'Access Denied')
+        return false
+      }
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
   useEffect(() => {
     fetchUsers("", null, 0, 10)
     fetchCategory()
     setloader(false)
   }, [])
+
   const values = {
     categories,
     loader,
@@ -107,8 +152,11 @@ export const MasterList = () => {
     userData,
     showDrawer,
     onClose,
-    fetchUsers
-
+    fetchUsers,
+    deleteUser,
+    setDeleteUser,
+    handleDeleteUser,
+    contextHolder
   }
   return (
     <PageContext.Provider value={values}>

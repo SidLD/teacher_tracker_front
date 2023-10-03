@@ -1,11 +1,16 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
 import {PageContext} from '../../lib/PageContext'
 import {Button, Form, Input} from 'antd';
 import {NavLink} from 'react-router-dom';
 
 const LoginView = () => {
     const {handleSubmit, contextHolder} = useContext(PageContext)
-
+    const [submit, setSubmit] = useState(true)
+    const handleLogin = async (e) => {
+        setSubmit(false)
+        await handleSubmit(e)
+        setSubmit(true)
+    }
     return (
         <div className='h-screen w-screen flex justify-center'>
             {contextHolder}
@@ -15,7 +20,7 @@ const LoginView = () => {
                 initialValues={
                     {remember: true}
                 }
-                onFinish={handleSubmit}
+                onFinish={handleLogin}
             >
                 <Form.Item label="Email" name="email"
                     rules={
@@ -42,8 +47,8 @@ const LoginView = () => {
                     <Input.Password/>
                 </Form.Item>
                 <div className='flex-col justify-center'>
-                    <Button  htmlType="submit" className='w-full border-none hover:bg-green-900 hover:text-white'>
-                        Sign in
+                    <Button disabled={!submit}  htmlType="submit" className='w-full border-none hover:bg-green-900 hover:text-white'>
+                        {submit ? "Sign in" : "Logging In"}
                     </Button>
                     <NavLink to={"/register"} className="flex justify-center p-2 rounded-md hover:bg-green-900 hover:text-white ">
                         <p className='bold uppercase'>No Account? Register</p>

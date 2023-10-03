@@ -37,6 +37,7 @@ export default function DashboardView() {
     },
   ]
 
+
   if(user?.role === "student"){
     return (
       <>{
@@ -167,13 +168,16 @@ export default function DashboardView() {
                     <th>
                       Category
                     </th>
+                    <th>
+                      Students
+                    </th>
                     <th colSpan="2">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                {categories.map((temp, index) => {
+                {categories.length > 1 && categories.map((temp, index) => {
                 return (
                     <CustomeCategory 
                       key={index} 

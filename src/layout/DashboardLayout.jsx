@@ -36,7 +36,7 @@ const RootLayout = () => {
     },
     {
       key: "approve",
-      label: "Approvale Page",
+      label: "Approval Page",
       icon: 
         <>
         <Badge count={notifactionCount} className="absolute top-3"/>

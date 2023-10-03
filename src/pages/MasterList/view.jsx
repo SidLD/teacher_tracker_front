@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { PageContext } from '../../lib/PageContext'
-import { Drawer, Select, Input, Button} from "antd"
+import { Drawer, Select, Input, Button, Modal} from "antd"
 import { CustomeTable } from '../../components/CustomeTable'
 export const MasterListView = () => {
-  const {users, onClose, open, userData ,loader, categories, fetchUsers} = useContext(PageContext)
+  const {users, onClose, open, userData ,loader, categories, fetchUsers, deleteUser, setDeleteUser, handleDeleteUser, contextHolder} = useContext(PageContext)
   let options = [];
   const { Search } = Input;
   const [currentStatus, setCurrentStatus] = useState(null)
@@ -32,6 +32,12 @@ export const MasterListView = () => {
     }else{
       setCurrentStatus(e)
       await fetchUsers("", e, postsPerPage * (currentPage - 1), postsPerPage );
+    }
+  }
+
+  const submitDeleteUser = async () => {
+    if(await handleDeleteUser()){
+      await fetchUsers("", currentStatus , postsPerPage * (currentPage-1), postsPerPage ) 
     }
   }
 
@@ -106,6 +112,7 @@ export const MasterListView = () => {
 
   return (
     <div className='content-center'>
+      {contextHolder}
       <div className='m-5'>
         <div className='w-full flex justify-center m-5'>
           <Select
@@ -161,6 +168,9 @@ export const MasterListView = () => {
           })} />}
         </div>
       </Drawer>
+      <Modal open={deleteUser} onCancel={() => setDeleteUser(null)} onOk={submitDeleteUser}>
+          <h2 className='text-red-500'>Confirm Delete ?</h2>
+      </Modal>
     </div>
   )
 }

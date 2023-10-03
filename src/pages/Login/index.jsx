@@ -25,11 +25,14 @@ const Login = () => {
         if(data.data.token){
           auth.storeToken(data.data.token)
           window.location.href = "/dashboard"
+          return true
         }else{
           alert('warning', data.data)
+          return false
         }
       } catch (error) {
         alert('warning',error.response.data.data)
+        return false
       }
     };
     const values = {

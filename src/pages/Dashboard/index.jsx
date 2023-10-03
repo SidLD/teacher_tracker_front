@@ -58,6 +58,7 @@ function Dashboard() {
     const handleNewCategoryCancel = () => {
       setIsModalOpen(false);
     };
+
     const fetchCategory = async (e) => {
         try {
             const res = await getCategory()
@@ -66,6 +67,7 @@ function Dashboard() {
             return null
         }
     }
+    
     const removeCategory = async (e) => {
       try {
         const res = await deleteCategory({categoryId: e})
