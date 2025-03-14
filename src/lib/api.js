@@ -1,6 +1,8 @@
 import axios from "axios";
 import { dataHeader } from "./helper";
 
+console.log("API URL:", process.env.REACT_APP_API_URL);
+
 // START OF USER API
 export const register = (data) => {
     return new Promise((resolve, reject) => {

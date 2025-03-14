@@ -28,7 +28,7 @@
     "eject": "react-scripts eject",
     "install-client": "npm install",
     "build-client": "npm run build",
-    "start-client": "npm run start"
+    "dev": "npm run start"
   },
   "eslintConfig": {
     "extends": [

@@ -22,7 +22,7 @@ export const Approve = () => {
         middleName: user.middleName,
         batch: user.batch,
         action: <div className='flex'>
-          <Button className=' text-red-900' onClick={() => {
+          <Button className='text-red-900 ' onClick={() => {
             removePendingUser(user._id)
           }} >Delete</Button>
           <Button onClick={() => {
@@ -82,7 +82,7 @@ export const Approve = () => {
   };
   const columns = [
     {
-      title: 'role',
+      title: 'Role',
       dataIndex: 'role',
       key: 'role',
     },

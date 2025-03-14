@@ -1,48 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.active{
-    color: white;
-    border-radius: 5px;
-    background-color: green;
-    transition-delay: .4s;
-}
-
-.inp {
-    border:none !important;
-    border-bottom: 1px solid #1890ff;
-    padding: 5px 10px;
-    outline: none;
- }
- [placeholder]:focus::-webkit-input-placeholder {
-    transition: text-indent 0.4s 0.4s ease; 
-    text-indent: -100%;
-    opacity: 1;
- }
-/* width */
-::-webkit-scrollbar {
-    width: 10px;
-}
-  
-/* Track */
-::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 25px;
-    margin-left: 3px;
-}
-  
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #0593ff;
-    border-radius: 25px;
-}
-  
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #1a02f3;
-}
-
 @keyframes fadeIn {
     from {
       opacity: 0;
@@ -100,4 +55,5 @@
   .animate-slideLeft {
     animation: slideLeft 0.7s ease-out;
   }
+  
   

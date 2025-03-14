@@ -1,216 +1,359 @@
-import React, { useContext } from 'react'
-import { PageContext } from '../../lib/PageContext'
-import {Button, DatePicker, Form, Modal, Input, Select } from "antd"
-import { CustomeCategory } from '../../components/CustomeCategory'
-import { CustomePieChart } from '../../components/CustomePieChart'
-import { CustomeVerticalChart } from '../../components/CustomeVerticalChart'
-import { CustomeTable } from '../../components/CustomeTable'
-import { auth } from '../../lib/services'
+"use client"
+
+import { useContext } from "react"
+import { PageContext } from "../../lib/PageContext"
+import { Button, DatePicker, Form, Modal, Input, Select } from "antd"
+import { CustomeCategory } from "../../components/CustomeCategory"
+import { CustomePieChart } from "../../components/CustomePieChart"
+import { CustomeVerticalChart } from "../../components/CustomeVerticalChart"
+import { CustomeTable } from "../../components/CustomeTable"
+import { auth } from "../../lib/services"
 
 export default function DashboardView() {
-  const { handleCancel, handleOk, hanldeSubmitStudentStatus,
-    showModal, isModalOpen, handleNewCategoryCancel, handleNewCategoryOk, handleNewCategoryChange, categories,
-      removeCategory, editCategory, contextHolder, form, loader, userStatus, analysis, studentsData,batchData
+  const {
+    handleCancel,
+    handleOk,
+    hanldeSubmitStudentStatus,
+    showModal,
+    isModalOpen,
+    handleNewCategoryCancel,
+    handleNewCategoryOk,
+    handleNewCategoryChange,
+    categories,
+    removeCategory,
+    editCategory,
+    contextHolder,
+    form,
+    loader,
+    userStatus,
+    analysis,
+    studentsData,
+    batchData,
   } = useContext(PageContext)
-  
+
   const user = auth.getUserInfo()
 
-  const studentColumns = [    
+  const studentColumns = [
     {
-      title: 'Category',
-      index: 'category',
+      title: "Category",
+      index: "category",
       isShow: true,
     },
     {
-      title: 'Start Date',
-      index: 'date',
-      isShow: true,
-    },{
-      title: 'Detail',
-      index: 'detail',
+      title: "Start Date",
+      index: "date",
       isShow: true,
     },
     {
-      title: 'Action',
-      index: 'action',
+      title: "Detail",
+      index: "detail",
+      isShow: true,
+    },
+    {
+      title: "Action",
+      index: "action",
       isShow: true,
     },
   ]
 
-
-  if(user?.role === "student"){
+  if (loader) {
     return (
-      <>{
-        !loader && 
-        
-      <div className='flex flex-col justify-center'>
-      {contextHolder}
-      
-      <div className='p-auto m-2 '>
-        <Button className='border-green-400 text-slate-200 bg-green-500' onClick={showModal}>
-          Add Status
-        </Button>
-        <Modal title="Status" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-          <p>You can add Multiple Status at the same date</p>
-            <Form
-              form={form}
-              labelCol={
-                {span: 6}
-              }
-          wrapperCol={
-              {span: 18}
-          }
-          labelAlign="right"
-          initialValues={
-              {remember: true}
-          }
-              onFinish={hanldeSubmitStudentStatus}>
-              <Form.Item label="Start Date" name="date" 
-               rules={
-                [{
-                    required: true,
-                     message: "Please inpuy Start Date"
-                }]
-              }>
-                <DatePicker format="YYYY-MM-DD hh:mm a"/>
-              </Form.Item>
-              <Form.Item label="Detail" name="detail"
-               rules={
-                [{
-                    required: true,
-                    message: "Please input detail"
-                }]
-              }>
-                <Input />
-              </Form.Item>
-              <Form.Item label="Category" name="categoryId"
-                rules={
-                  [{
-                      required: true,
-                       message: "Please select Category"
-                  }]
-                }>
-              <Select
-                style={
-                    {width: 120}
-                }
-                options={categories.map((category, index) => {
-                  return (
-                    {
-                      value: category._id,
-                      label: category.name,
-                      key: index
-                    }
-                  )
-                })}
-                />
-              </Form.Item>
-            </Form>
-        </Modal>
+      <div className="flex items-center justify-center h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+        <div className="text-center">
+          <div className="inline-block w-16 h-16 mb-4 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+          <p className="text-2xl font-semibold tracking-wider text-gray-700 uppercase">Loading Dashboard</p>
+        </div>
       </div>
-      {!loader && <div className=' rounded-lg  mx-5'>
-        <CustomeTable column={studentColumns}  dataSource={userStatus} />
-      </div>}
-    </div>
-      }
-      </>
     )
   }
-  
-  if(user?.isApprove){
+
+  if (user?.role === "student") {
     return (
-      <>
-      {!loader ?
-        <div className=''>
+      <div className="min-h-screen p-6 bg-gradient-to-b from-gray-50 to-gray-100 animate-fadeIn">
         {contextHolder}
-        <div className='flex-col content-center'>
-          <div className='flex  h-full'>
-            <div className='flex w-1/2 border-b border-green-500'>
-              <div className='w-1/2'>
-                  {analysis && <CustomePieChart labels={analysis.categories} dataSource={analysis.studentsData} label="# of Students" />}
+
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-gray-800">Student Dashboard</h1>
+            <Button
+              onClick={showModal}
+              className="flex items-center h-auto gap-2 px-4 py-2 text-white transition-all duration-300 transform bg-blue-500 border-none rounded-md shadow-md hover:bg-blue-600 hover:shadow-lg hover:scale-105"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Add Status
+            </Button>
+          </div>
+
+          <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideUp">
+            <div className="p-4 border-b border-gray-200 bg-blue-50">
+              <h2 className="text-lg font-semibold text-gray-700">Your Status Entries</h2>
+              <p className="text-sm text-gray-500">Track your progress and activities</p>
+            </div>
+            <CustomeTable column={studentColumns} dataSource={userStatus} />
+          </div>
+        </div>
+
+        <Modal
+          title={
+            <div className="flex items-center gap-2 text-blue-700">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Add New Status
+            </div>
+          }
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          okButtonProps={{
+            style: { backgroundColor: "#10b981", borderColor: "#10b981" },
+          }}
+          className="animate-fadeIn"
+        >
+          <div className="p-2 mb-4 border-l-4 border-blue-400 rounded-md bg-blue-50">
+            <p className="text-sm text-blue-700">You can add multiple status entries for the same date</p>
+          </div>
+
+          <Form
+            form={form}
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            labelAlign="right"
+            initialValues={{ remember: true }}
+            onFinish={hanldeSubmitStudentStatus}
+            className="mt-4"
+          >
+            <Form.Item label="Start Date" name="date" rules={[{ required: true, message: "Please input Start Date" }]}>
+              <DatePicker format="YYYY-MM-DD hh:mm a" className="w-full border-gray-300 rounded-md" />
+            </Form.Item>
+
+            <Form.Item label="Detail" name="detail" rules={[{ required: true, message: "Please input detail" }]}>
+              <Input className="rounded-md" />
+            </Form.Item>
+
+            <Form.Item
+              label="Category"
+              name="categoryId"
+              rules={[{ required: true, message: "Please select Category" }]}
+            >
+              <Select
+                style={{ width: "100%" }}
+                className="rounded-md"
+                options={categories.map((category, index) => ({
+                  value: category._id,
+                  label: category.name,
+                  key: index,
+                }))}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    )
+  }
+
+  if (user?.isApprove) {
+    return (
+      <div className="min-h-screen p-6 bg-gradient-to-b from-gray-50 to-gray-100 animate-fadeIn">
+        {contextHolder}
+
+        <div className="mb-6">
+          <h1 className="mb-4 text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Analytics Section */}
+            <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideRight">
+              <div className="p-4 border-b border-gray-200 bg-blue-50">
+                <h2 className="text-lg font-semibold text-gray-700">Analytics Overview</h2>
+                <p className="text-sm text-gray-500">Student distribution by category</p>
               </div>
-              <div className='w-1/2 text-center p-2'>
-                <p className='uppercase text-2xl'> Data</p>
-                <div className='flex justify-between'>  
-                  <p>Total No. of Male: </p>  
-                  <p>{studentsData.totalMale}</p> 
+
+              <div className="flex flex-col md:flex-row">
+                <div className="w-full p-4 md:w-1/2">
+                  {analysis && (
+                    <div className="transition-transform duration-500 transform hover:scale-105">
+                      <CustomePieChart
+                        labels={analysis.categories}
+                        dataSource={analysis.studentsData}
+                        label="# of Students"
+                      />
+                    </div>
+                  )}
                 </div>
-                <div className='flex justify-between'>  
-                  <p>Total No: of Female:  </p>  
-                  <p>{studentsData.totalFemale} </p> 
-                </div>
-                <div className='flex justify-between'>  
-                  <p>Total No: of Students: </p>  
-                  <p>{studentsData.totalStudents}</p> 
-                </div>
-                <div className='flex justify-between'>  
-                  <p>Total No: of Teachers: </p>  
-                  <p>{studentsData.totalTeachers}</p> 
+
+                <div className="w-full p-6 md:w-1/2">
+                  <h3 className="mb-4 text-xl font-semibold text-center text-gray-700 uppercase">Statistics</h3>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-blue-50 hover:shadow-md">
+                      <p className="font-medium text-gray-700">Total Male Students:</p>
+                      <p className="text-lg font-bold text-blue-600">{studentsData.totalMale}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-pink-50 hover:shadow-md">
+                      <p className="font-medium text-gray-700">Total Female Students:</p>
+                      <p className="text-lg font-bold text-pink-600">{studentsData.totalFemale}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-blue-50 hover:shadow-md">
+                      <p className="font-medium text-gray-700">Total Students:</p>
+                      <p className="text-lg font-bold text-blue-600">{studentsData.totalStudents}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-purple-50 hover:shadow-md">
+                      <p className="font-medium text-gray-700">Total Teachers:</p>
+                      <p className="text-lg font-bold text-purple-600">{studentsData.totalTeachers}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className='w-1/2 border-b border-l border-green-500'>
-              <div className='flex justify-end '>
-                <Button 
-                className='border-2 border-green-900 m-2'
-                onClick={showModal}>
+
+            {/* Categories Section */}
+            <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideLeft">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-700">Categories Management</h2>
+                  <p className="text-sm text-gray-500">Manage student categories</p>
+                </div>
+
+                <Button
+                  onClick={showModal}
+                  className="flex items-center h-auto gap-1 px-3 py-1 text-white transition-all duration-300 transform bg-blue-500 border-none rounded-md shadow-md hover:bg-blue-600 hover:shadow-lg hover:scale-105"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                   Add Category
                 </Button>
-                <Modal title="Category" open={isModalOpen} onOk={handleNewCategoryOk} onCancel={handleNewCategoryCancel}>
-                    <p className='text-red-600'>Note* You Cannot Delete Category</p>
-                    <Input onChange={handleNewCategoryChange} />
-                </Modal>
               </div>
-              <div className='flex justify-center'>
-              <table className='w-full mx-2 text-center'>
-                <thead className='uppercase border-2 border-green-600'>
-                  <tr>
-                    <th>
-                      Category
-                    </th>
-                    <th>
-                      Students
-                    </th>
-                    <th colSpan="2">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                {categories.length > 1 && categories.map((temp, index) => {
-                return (
-                    <CustomeCategory 
-                      key={index} 
-                      name={temp.name}
-                      id={temp._id}
-                      deleteCategory={removeCategory}
-                      editCategory={editCategory}
-                    /> 
-                )
-              })}
-                </tbody>
-              </table>
+
+              <div className="p-4">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500">
+                          Category
+                        </th>
+                        <th className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500">
+                          Students
+                        </th>
+                        <th
+                          className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500"
+                          colSpan="2"
+                        >
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {categories.length > 1 &&
+                        categories.map((temp, index) => (
+                          <CustomeCategory
+                            key={index}
+                            name={temp.name}
+                            id={temp._id}
+                            deleteCategory={removeCategory}
+                            editCategory={editCategory}
+                          />
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-          <div className='h-1/2'>
-              {batchData && <CustomeVerticalChart props={batchData}/>}
+
+          {/* Batch Data Chart */}
+          <div className="mt-6 overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideUp">
+            <div className="p-4 border-b border-gray-200 bg-blue-50">
+              <h2 className="text-lg font-semibold text-gray-700">Batch Distribution</h2>
+              <p className="text-sm text-gray-500">Student distribution by batch year</p>
             </div>
+
+            <div className="p-4">
+              {batchData && (
+                <div className="transform transition-transform duration-500 hover:scale-[1.01]">
+                  <CustomeVerticalChart props={batchData} />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
+        <Modal
+          title={
+            <div className="flex items-center gap-2 text-blue-700">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Add New Category
+            </div>
+          }
+          open={isModalOpen}
+          onOk={handleNewCategoryOk}
+          onCancel={handleNewCategoryCancel}
+          okButtonProps={{
+            style: { backgroundColor: "#10b981", borderColor: "#10b981" },
+          }}
+          className="animate-fadeIn"
+        >
+          <div className="p-2 mb-4 border-l-4 border-red-400 rounded-md bg-red-50">
+            <p className="text-sm text-red-700">Note: You cannot delete categories once created</p>
+          </div>
+
+          <div className="mt-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Category Name</label>
+            <Input onChange={handleNewCategoryChange} placeholder="Enter new category name" className="rounded-md" />
+          </div>
+        </Modal>
       </div>
-      :
-        <div className='items-center text-center uppercase text-2xl h-full'>
-          Loading
-        </div>
-      }
-      </>
     )
   }
 
   return (
-    <div>
-      <p>It seems you're not approved by the admin</p>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 animate-fadeIn">
+      <div className="w-full max-w-md p-8 text-center bg-white border-t-4 border-yellow-500 shadow-lg rounded-xl">
+        <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-8 h-8 text-yellow-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+        <h2 className="mb-2 text-2xl font-bold text-gray-800">Pending Approval</h2>
+        <p className="mb-6 text-gray-600">Your account is currently pending approval from an administrator.</p>
+        <p className="text-sm text-gray-500">Please check back later or contact support for assistance.</p>
+      </div>
     </div>
   )
-
 }
+
