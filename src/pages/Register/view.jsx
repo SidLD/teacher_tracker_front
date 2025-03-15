@@ -1,13 +1,14 @@
 "use client"
 
-import { useContext } from "react"
-import { Button, Select, Form, Input, InputNumber } from "antd"
+import { useContext, useState } from "react"
+import { Button, Select, Form, Input, InputNumber, Radio } from "antd"
 import { PageContext } from "../../lib/PageContext"
 import { useNavigate } from "react-router-dom"
 
 function RegisterView() {
-  const { handleSubmit, contextHolder } = useContext(PageContext)
+  const { handleSubmit, contextHolder, categories } = useContext(PageContext)
   const navigate = useNavigate()
+  const [categoryType, setCategoryType] = useState("PROF")
   return (
     <div className="flex items-center justify-center w-full min-h-screen px-4 py-12 bg-gradient-to-br from-blue-50 to-green-50 sm:px-6 lg:px-8">
       {contextHolder}
@@ -38,10 +39,6 @@ function RegisterView() {
             <h3 className="text-lg font-medium text-gray-700">Personal Information</h3>
           </div>
 
-          <Form.Item label="Year Batch" name="batch" style={{ width: "100%" }}>
-            <InputNumber min={2000} max={2030} style={{ width: "100%" }} className="rounded-md" />
-          </Form.Item>
-
           <Form.Item
             label="Email"
             name="email"
@@ -55,6 +52,60 @@ function RegisterView() {
             style={{ width: "100%" }}
           >
             <Input className="rounded-md" />
+          </Form.Item>
+
+          <Form.Item
+            label="Contact"
+            name="contact"
+            rules={[
+              {
+                type: "contact",
+                required: true,
+                message: "Please input your Contact",
+              },
+            ]}
+            style={{ width: "100%" }}
+          >
+            <Input className="rounded-md" />
+          </Form.Item>
+          <Form.Item
+            label="Position Type"
+            name="categoryType"
+            rules={[
+              {
+                required: true,
+                message: "Please select category type",
+              },
+            ]}
+            style={{ width: "100%" }}
+          >
+            <Radio.Group onChange={(e) => setCategoryType(e.target.value)} defaultValue="PROF">
+              <Radio value="PROF">PROF</Radio>
+              <Radio value="NON-PROF">NON-PROF</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
+            label="Position"
+            name="position"
+            rules={[
+              {
+                required: true,
+                message: "Please select Position",
+              },
+            ]}
+            style={{ width: "100%" }}
+          >
+            <Select
+              style={{ width: "100%" }}
+              className="rounded-md"
+              options={categories
+                .filter((category) => category.position === categoryType)
+                .map((category) => ({
+                  value: category._id,
+                  label: category.name,
+                }))}
+            />
           </Form.Item>
 
           <Form.Item
@@ -136,53 +187,7 @@ function RegisterView() {
                 ]}
               />
             </Form.Item>
-
-            <Form.Item
-              label="Role"
-              name="role"
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              rules={[
-                {
-                  required: true,
-                  message: "Please select role",
-                },
-              ]}
-            >
-              <Select
-                style={{ width: "100%" }}
-                className="rounded-md"
-                options={[
-                  {
-                    value: "student",
-                    label: "Student",
-                  },
-                  {
-                    value: "teacher",
-                    label: "Teacher",
-                  },
-                ]}
-              />
-            </Form.Item>
           </div>
-
-          <div className="pb-4 mb-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-700">Security</h3>
-          </div>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your password",
-              },
-            ]}
-            style={{ width: "100%" }}
-          >
-            <Input.Password className="rounded-md" />
-          </Form.Item>
 
           <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row">
             <Form.Item className="w-full m-0">

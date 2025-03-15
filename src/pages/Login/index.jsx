@@ -21,13 +21,13 @@ const Login = () => {
       };
       try {
         alert('info', "Logging In")
-        const data = await login(payload)
-        if(data.data.token){
-          auth.storeToken(data.data.token)
+        const { data } = await login(payload)
+        if(data.token){
+          auth.storeToken(data.token)
           window.location.href = "/dashboard"
           return true
         }else{
-          alert('warning', data.data)
+          alert('warning', data)
           return false
         }
       } catch (error) {

@@ -10,8 +10,10 @@ function Dashboard() {
     const [loader, setloader] = useState(true)
     
     //Admin Functions
-    const [newCategory, setCategory] = useState()
-    const [categories, setCategories] = useState([{name: ""}])
+    const [newCategory, setCategory] = useState({
+      position: String, type: String
+    })
+    const [categories, setCategories] = useState([{name: "", position: ""}])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userStatus, setUserStatus] = useState([])
     const [analysis, setAnalysis] = useState()
@@ -31,13 +33,17 @@ function Dashboard() {
       return data
     }
     const handleNewCategoryChange = (e) => {
-      setCategory(e.target.value)
+      setCategory({...newCategory, name: e.target.value})
+    }
+
+    const handlePoisitonCategoryChange = (e) => {
+      setCategory({...newCategory, position: e})
     }
     const showModal = () => {
       setIsModalOpen(true);
     };
 
-    const handleNewCategoryOk = async () => {
+    const  handleNewCategoryOk = async () => {
       try {
         const payload = {
           category : newCategory
@@ -214,11 +220,12 @@ function Dashboard() {
       isModalOpen, 
       handleNewCategoryCancel, 
       handleNewCategoryOk, 
-      newCategory, handleNewCategoryChange, categories,
+      newCategory, handleNewCategoryChange,handlePoisitonCategoryChange,  categories,
       removeCategory, editCategory,
       handleCancel,
       handleOk,
       contextHolder,
+      fetchCategory,
       loader,
     }
     return (

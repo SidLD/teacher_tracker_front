@@ -71,7 +71,7 @@ const onClose = () => {
   const fetchUsers = async (query, currentStatus, start, limit) => {
     try {
       const payload = { 
-        role: "student", 
+        role: "TEACHER", 
         currentStatus: currentStatus, 
         search: query, 
         start, 
@@ -82,13 +82,14 @@ const onClose = () => {
       const tempUser = result.data.data.map((user, index) => {
         return {
           key: index,
-          currentStatus: user.currentStatus ? user.currentStatus.name : "Not Set",
+          position: user.position ? user.position.name : "Not Set",
           lastName: user.lastName,
           firstName: user.firstName,
           middleName: user.middleName,
-          batch: user.batch,
-          action: <div className='flex flex-row gap-3 justify-center'>
-          <Button
+          contact: user.contact,
+          email: user.email,
+          action: <div className='flex flex-row justify-center gap-3 mx-2'>
+          {/* <Button
             style={
                     {width: "30%",
                     color: 'black',
@@ -99,14 +100,14 @@ const onClose = () => {
             onClick={() => {
               showDrawer(user._id)
             }}  
-          >View Data</Button>
+          >View Data</Button> */}
           <Button
             style={
-                    {width: "30%",
+                    {width: "100%",
                     color: 'black',
                 }
             }
-            className='active:text-gray-100 bg-red-500 '
+            className='bg-red-500 active:text-gray-100 '
             onClick={() => {
               setDeleteUser(user)
             }}  

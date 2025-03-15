@@ -1,23 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PageContext } from '../../lib/PageContext'
 import RegisterView from './view'
-import {register} from "../../lib/api"
+import {getCategory, register} from "../../lib/api"
 import { message } from 'antd'
 
 export default function Register() {
-  
-  const [messageApi, contextHolder] = message.useMessage();
+      useEffect(() => {
+        fetchCategory()
+      }, [])
+      const [messageApi, contextHolder] = message.useMessage();
+      const [categories, setCategories] = useState([{name: "", position: ""}])
+      const fetchCategory = async (e) => {
+          try {
+              const res = await getCategory()
+              setCategories(res.data.data)
+            } catch (error) {
+              return null
+          }
+      }
     const handleSubmit = async(e) => {
         const payload = {
           password: e.password,
           email: e.email,
+          contact: e.contact,
           firstName: e.firstName,
           lastName: e.lastName,
           middleName: e.middleName,
           age: e.age,
           gender: e.gender,
           role: e.role,
-          batch: e.batch
+          batch: e.batch,
+          position: e.position,
         };
 
         try {
@@ -50,7 +63,8 @@ export default function Register() {
       };
       const values = {
         handleSubmit,
-        contextHolder
+        contextHolder,
+        categories
       };
   return (
     <PageContext.Provider value={values}>

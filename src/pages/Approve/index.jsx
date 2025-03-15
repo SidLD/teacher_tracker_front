@@ -16,11 +16,12 @@ export const Approve = () => {
       const dataSource = data.data.data.map((user, index) => {
       return {
         key: index,
-        role: <span className='uppercase'>{user.role}</span>,
+        position: <span className='uppercase'>{user.position.name}</span>,
+        contact: user.contact,
+        email: user.email,
         lastName: user.lastName,
         firstName: user.firstName,
         middleName: user.middleName,
-        batch: user.batch,
         action: <div className='flex'>
           <Button className='text-red-900 ' onClick={() => {
             removePendingUser(user._id)
@@ -82,9 +83,9 @@ export const Approve = () => {
   };
   const columns = [
     {
-      title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
+      title: 'Position',
+      dataIndex: 'position',
+      key: 'position',
     },
     {
       title: 'LastName',
@@ -102,9 +103,14 @@ export const Approve = () => {
       key: 'middleName',
     },
     {
-      title: 'Batch',
-      dataIndex: 'batch',
-      key: 'batch',
+      title: 'Contact',
+      dataIndex: 'contact',
+      key: 'contact',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Action',

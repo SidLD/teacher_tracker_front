@@ -62,13 +62,18 @@ export const MasterListView = () => {
       isShow: true,
     },
     {
-      title: "Current Status",
-      index: "currentStatus",
+      title: "Position",
+      index: "position",
       isShow: true,
     },
     {
-      title: "Batch",
-      index: "batch",
+      title: "Contact",
+      index: "contact",
+      isShow: true,
+    },
+    {
+      title: "Email",
+      index: "email",
       isShow: true,
     },
     {
@@ -119,7 +124,7 @@ export const MasterListView = () => {
 
       <div className="master-list-content">
         <div className="master-list-header">
-          <h1 className="master-list-title">Student Master List</h1>
+          <h1 className="master-list-title">Teacher Master List</h1>
 
           <div className="search-filter-container">
             <Select
@@ -145,13 +150,13 @@ export const MasterListView = () => {
         {loader ? (
           <div className="loader-container">
             <div className="loader-spinner"></div>
-            <p className="loader-text">Loading student data...</p>
+            <p className="loader-text">Loading Teacher data...</p>
           </div>
         ) : (
           <div className="table-container">
             <div className="table-header">
-              <h2 className="table-title">Student Records</h2>
-              <p className="table-subtitle">Manage and view detailed student information</p>
+              <h2 className="table-title">Teacher Records</h2>
+              <p className="table-subtitle">Manage and view detailed Teacher information</p>
             </div>
 
             <div className="table-content">
@@ -194,7 +199,7 @@ export const MasterListView = () => {
         title={
           <div className="drawer-title">
             <UserOutlined />
-            <span>Student Details</span>
+            <span>Teacher Details</span>
           </div>
         }
         placement="right"
@@ -205,7 +210,7 @@ export const MasterListView = () => {
         <div className="student-info-card">
           <div className="student-info-header">
             <h3 className="student-info-title">Personal Information</h3>
-            <div className="student-badge">Student</div>
+            <div className="student-badge">Teacher</div>
           </div>
 
           <div className="student-info-content">

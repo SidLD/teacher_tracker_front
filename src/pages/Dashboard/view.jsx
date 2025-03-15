@@ -1,11 +1,9 @@
 "use client"
 
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { PageContext } from "../../lib/PageContext"
 import { Button, DatePicker, Form, Modal, Input, Select } from "antd"
-import { CustomeCategory } from "../../components/CustomeCategory"
 import { CustomePieChart } from "../../components/CustomePieChart"
-import { CustomeVerticalChart } from "../../components/CustomeVerticalChart"
 import { CustomeTable } from "../../components/CustomeTable"
 import { auth } from "../../lib/services"
 
@@ -19,7 +17,7 @@ export default function DashboardView() {
     handleNewCategoryCancel,
     handleNewCategoryOk,
     handleNewCategoryChange,
-    categories,
+    handlePoisitonCategoryChange,
     removeCategory,
     editCategory,
     contextHolder,
@@ -28,9 +26,54 @@ export default function DashboardView() {
     userStatus,
     analysis,
     studentsData,
-    batchData,
+    fetchCategory,
+    categories
   } = useContext(PageContext)
 
+  const [selectedPosition, setSelectedPosition] = useState("PROF")
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingCategory, setEditingCategory] = useState(null)
+  const [editPosition, setEditPosition] = useState("")
+  const [editName, setEditName] = useState("")
+
+  const handlePositionChange = (value) => {
+    setSelectedPosition(value)
+    handlePoisitonCategoryChange(value)
+  }
+
+  const handleEditPositionChange = (value) => {
+    setEditPosition(value)
+  }
+
+  const handleEditNameChange = (e) => {
+    setEditName(e.target.value)
+  }
+
+  const handleEditCategory = (categoryId) => {
+    const category = categories.find((cat) => cat._id === categoryId)
+    if (category) {
+      setEditingCategory(category)
+      setEditPosition(category.position)
+      setEditName(category.name)
+      setIsEditModalOpen(true)
+    }
+  }
+
+  const handleEditModalCancel = () => {
+    setIsEditModalOpen(false)
+    setEditingCategory(null)
+  }
+
+  const handleEditModalOk = async () => {
+    if (editingCategory && editPosition && editName.trim()) {
+      await editCategory({...editingCategory, name: editName, position: editPosition})
+      await fetchCategory()
+      // Close the modal
+      setIsEditModalOpen(false)
+      setEditingCategory(null)
+    }
+  }
+  
   const user = auth.getUserInfo()
 
   const studentColumns = [
@@ -74,7 +117,7 @@ export default function DashboardView() {
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-gray-800">Student Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Teacher Dashboard</h1>
             <Button
               onClick={showModal}
               className="flex items-center h-auto gap-2 px-4 py-2 text-white transition-all duration-300 transform bg-blue-500 border-none rounded-md shadow-md hover:bg-blue-600 hover:shadow-lg hover:scale-105"
@@ -175,7 +218,7 @@ export default function DashboardView() {
             <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideRight">
               <div className="p-4 border-b border-gray-200 bg-blue-50">
                 <h2 className="text-lg font-semibold text-gray-700">Analytics Overview</h2>
-                <p className="text-sm text-gray-500">Student distribution by category</p>
+                <p className="text-sm text-gray-500">Teacher distribution by category</p>
               </div>
 
               <div className="flex flex-col md:flex-row">
@@ -185,7 +228,7 @@ export default function DashboardView() {
                       <CustomePieChart
                         labels={analysis.categories}
                         dataSource={analysis.studentsData}
-                        label="# of Students"
+                        label="# of Teachers"
                       />
                     </div>
                   )}
@@ -196,18 +239,13 @@ export default function DashboardView() {
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-blue-50 hover:shadow-md">
-                      <p className="font-medium text-gray-700">Total Male Students:</p>
+                      <p className="font-medium text-gray-700">Total Male Teachers:</p>
                       <p className="text-lg font-bold text-blue-600">{studentsData.totalMale}</p>
                     </div>
 
                     <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-pink-50 hover:shadow-md">
-                      <p className="font-medium text-gray-700">Total Female Students:</p>
+                      <p className="font-medium text-gray-700">Total Female Teachers:</p>
                       <p className="text-lg font-bold text-pink-600">{studentsData.totalFemale}</p>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-blue-50 hover:shadow-md">
-                      <p className="font-medium text-gray-700">Total Students:</p>
-                      <p className="text-lg font-bold text-blue-600">{studentsData.totalStudents}</p>
                     </div>
 
                     <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-purple-50 hover:shadow-md">
@@ -223,8 +261,8 @@ export default function DashboardView() {
             <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideLeft">
               <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-700">Categories Management</h2>
-                  <p className="text-sm text-gray-500">Manage student categories</p>
+                  <h2 className="text-lg font-semibold text-gray-700">Position Management</h2>
+                  <p className="text-sm text-gray-500">Manage Teacher Positions</p>
                 </div>
 
                 <Button
@@ -251,7 +289,7 @@ export default function DashboardView() {
                           Category
                         </th>
                         <th className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500">
-                          Students
+                          Position
                         </th>
                         <th
                           className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500"
@@ -262,15 +300,58 @@ export default function DashboardView() {
                       </tr>
                     </thead>
                     <tbody>
-                      {categories.length > 1 &&
-                        categories.map((temp, index) => (
-                          <CustomeCategory
-                            key={index}
-                            name={temp.name}
-                            id={temp._id}
-                            deleteCategory={removeCategory}
-                            editCategory={editCategory}
-                          />
+                      {categories.length > 0 &&
+                        categories.map((category, index) => (
+                          <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                            <td className="px-4 py-3">{category.name}</td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`px-2 py-1 text-xs font-medium rounded-full ${category.position === "PROF" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
+                              >
+                                {category.position}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <button
+                                onClick={() => handleEditCategory(category._id)}
+                                className="p-1 mr-2 text-blue-600 transition-colors duration-200 rounded hover:bg-blue-100"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="w-5 h-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => removeCategory(category._id)}
+                                className="p-1 text-red-600 transition-colors duration-200 rounded hover:bg-red-100"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="w-5 h-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                  />
+                                </svg>
+                              </button>
+                            </td>
+                          </tr>
                         ))}
                     </tbody>
                   </table>
@@ -278,24 +359,9 @@ export default function DashboardView() {
               </div>
             </div>
           </div>
-
-          {/* Batch Data Chart */}
-          <div className="mt-6 overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideUp">
-            <div className="p-4 border-b border-gray-200 bg-blue-50">
-              <h2 className="text-lg font-semibold text-gray-700">Batch Distribution</h2>
-              <p className="text-sm text-gray-500">Student distribution by batch year</p>
-            </div>
-
-            <div className="p-4">
-              {batchData && (
-                <div className="transform transition-transform duration-500 hover:scale-[1.01]">
-                  <CustomeVerticalChart props={batchData} />
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
+        {/* Add Category Modal */}
         <Modal
           title={
             <div className="flex items-center gap-2 text-blue-700">
@@ -322,9 +388,77 @@ export default function DashboardView() {
           </div>
 
           <div className="mt-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">Position Type</label>
+            <Select
+              style={{ width: "100%" }}
+              className="mb-4 rounded-md"
+              value={selectedPosition}
+              onChange={handlePositionChange}
+            >
+              <Select.Option value="PROF">PROF</Select.Option>
+              <Select.Option value="NON-PROF">NON-PROF</Select.Option>
+            </Select>
+
             <label className="block mb-2 text-sm font-medium text-gray-700">Category Name</label>
             <Input onChange={handleNewCategoryChange} placeholder="Enter new category name" className="rounded-md" />
           </div>
+        </Modal>
+
+        {/* Edit Position Modal */}
+        <Modal
+          title={
+            <div className="flex items-center gap-2 text-blue-700">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              Edit Category
+            </div>
+          }
+          open={isEditModalOpen}
+          onOk={handleEditModalOk}
+          onCancel={handleEditModalCancel}
+          okButtonProps={{
+            style: { backgroundColor: "#10b981", borderColor: "#10b981" },
+          }}
+          className="animate-fadeIn"
+        >
+          {editingCategory && (
+            <div className="mt-4">
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium text-gray-700">Category Name</label>
+                <Input
+                  value={editName}
+                  onChange={handleEditNameChange}
+                  placeholder="Enter category name"
+                  className="rounded-md"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium text-gray-700">Position</label>
+                <Select
+                  style={{ width: "100%" }}
+                  className="rounded-md"
+                  value={editPosition}
+                  onChange={handleEditPositionChange}
+                >
+                  <Select.Option value="PROF">PROF</Select.Option>
+                  <Select.Option value="NON-PROF">NON-PROF</Select.Option>
+                </Select>
+              </div>
+            </div>
+          )}
         </Modal>
       </div>
     )
