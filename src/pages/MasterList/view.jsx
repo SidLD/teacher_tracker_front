@@ -294,7 +294,7 @@ export const MasterListView = () => {
 
             <div className="student-info-row">
               <span className="student-info-label">Position Type:</span>
-              <span className="student-role-badge">{userData?.position?.position || 'Not Set'}</span>
+              <span className="student-role-badge">{userData?.position?.position.replace('_', ' ') || 'Not Set'}</span>
             </div>
 
             <div className="student-info-row">
@@ -308,7 +308,7 @@ export const MasterListView = () => {
             </div>
 
             <div className="student-info-row">
-              <span className="student-info-label">Age Type:</span>
+              <span className="student-info-label">Age:</span>
               <span className="student-role-badge">{userData.age || 'Not Set'}</span>
             </div>
           </div>
