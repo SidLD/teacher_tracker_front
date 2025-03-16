@@ -35,15 +35,7 @@ export const MasterList = () => {
   }
 
   const showDrawer = async (e) => {
-    const result = await getUser({userId: e})
-    const data = result.data.data
-    let sorted = await getUserStatus({userId: data._id})
-    sorted = sorted.data.data.map((temp) => {
-      temp.date = dateFormat(temp.date)
-      return temp
-    })
-    data.status = sorted
-    setUserData(data)
+    setUserData(e)
     setOpen(true);
   };
   
@@ -89,7 +81,7 @@ const onClose = () => {
           contact: user.contact,
           email: user.email,
           action: <div className='flex flex-row justify-center gap-3 mx-2'>
-          {/* <Button
+          <Button
             style={
                     {width: "30%",
                     color: 'black',
@@ -98,9 +90,9 @@ const onClose = () => {
             }
             className='active:text-gray-100 hover:bg-green-900 '
             onClick={() => {
-              showDrawer(user._id)
+              showDrawer(user)
             }}  
-          >View Data</Button> */}
+          >View Data</Button>
           <Button
             style={
                     {width: "100%",

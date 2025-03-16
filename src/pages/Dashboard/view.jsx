@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import { PageContext } from "../../lib/PageContext"
 import { Button, DatePicker, Form, Modal, Input, Select } from "antd"
 import { CustomePieChart } from "../../components/CustomePieChart"
@@ -27,7 +27,7 @@ export default function DashboardView() {
     analysis,
     studentsData,
     fetchCategory,
-    categories
+    categories,
   } = useContext(PageContext)
 
   const [selectedPosition, setSelectedPosition] = useState("PROF")
@@ -66,14 +66,14 @@ export default function DashboardView() {
 
   const handleEditModalOk = async () => {
     if (editingCategory && editPosition && editName.trim()) {
-      await editCategory({...editingCategory, name: editName, position: editPosition})
+      await editCategory({ ...editingCategory, name: editName, position: editPosition })
       await fetchCategory()
       // Close the modal
       setIsEditModalOpen(false)
       setEditingCategory(null)
     }
   }
-  
+
   const user = auth.getUserInfo()
 
   const studentColumns = [
@@ -218,13 +218,13 @@ export default function DashboardView() {
             <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideRight">
               <div className="p-4 border-b border-gray-200 bg-blue-50">
                 <h2 className="text-lg font-semibold text-gray-700">Analytics Overview</h2>
-                <p className="text-sm text-gray-500">Teacher distribution by category</p>
+                <p className="text-sm text-gray-500">Candidate distribution by position</p>
               </div>
 
               <div className="flex flex-col md:flex-row">
                 <div className="w-full p-4 md:w-1/2">
                   {analysis && (
-                    <div className="transition-transform duration-500 transform hover:scale-105">
+                    <div className="px-[30%] transition-transform duration-500 transform hover:scale-105">
                       <CustomePieChart
                         labels={analysis.categories}
                         dataSource={analysis.studentsData}

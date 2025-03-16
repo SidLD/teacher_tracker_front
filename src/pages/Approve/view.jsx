@@ -13,8 +13,8 @@ export const ApproveView = () => {
 
       <div className="approve-header">
         <div className="approve-title-section">
-          <h1 className="approve-title">User Approval Dashboard</h1>
-          <p className="approve-subtitle">Review and manage pending user approval requests</p>
+          <h1 className="approve-title">Candidate Approval Dashboard</h1>
+          <p className="approve-subtitle">Review and manage pending candidate approval requests</p>
         </div>
 
         <div className="approve-stats">

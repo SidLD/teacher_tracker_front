@@ -7,41 +7,57 @@ import { CustomeTable } from "../../components/CustomeTable"
 import { SearchOutlined, LeftOutlined, RightOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons"
 
 export const MasterListView = () => {
-  const {users, onClose, open, userData ,loader, categories, fetchUsers, deleteUser, setDeleteUser, handleDeleteUser, contextHolder} = useContext(PageContext)
-  let options = [];
-  const { Search } = Input;
+  const {
+    users,
+    onClose,
+    open,
+    userData,
+    loader,
+    categories,
+    fetchUsers,
+    deleteUser,
+    setDeleteUser,
+    handleDeleteUser,
+    contextHolder,
+  } = useContext(PageContext)
+  const options = []
+  const { Search } = Input
   const [currentStatus, setCurrentStatus] = useState(null)
+  const [sortField, setSortField] = useState("createdAt")
+  const [sortOrder, setSortOrder] = useState("desc")
 
-  const onSearch = (value) =>  fetchUsers(
-    value, 
-    currentStatus, 
-    postsPerPage * (currentPage - 1), 
-    postsPerPage 
-  );
+  const onSearch = (value) =>
+    fetchUsers(value, currentStatus, postsPerPage * (currentPage - 1), postsPerPage, sortField, sortOrder)
 
-  categories.forEach(element => {
+  categories.forEach((element) => {
     options.push(element)
-  });
+  })
 
   options.push({
-    label : "ALL",
+    label: "ALL",
     value: "all",
-    key: categories.length
+    key: categories.length,
   })
 
   const handleOptionChange = async (e) => {
-    if(e === "all"){
+    if (e === "all") {
       setCurrentStatus(null)
-      await fetchUsers("", null, postsPerPage * (currentPage - 1), postsPerPage );
-    }else{
+      await fetchUsers("", null, postsPerPage * (currentPage - 1), postsPerPage, sortField, sortOrder)
+    } else {
       setCurrentStatus(e)
-      await fetchUsers("", e, postsPerPage * (currentPage - 1), postsPerPage );
+      await fetchUsers("", e, postsPerPage * (currentPage - 1), postsPerPage, sortField, sortOrder)
     }
   }
 
+  const handleSort = (field) => {
+    const newSortOrder = field === sortField && sortOrder === "asc" ? "desc" : "asc"
+    setSortField(field)
+    setSortOrder(newSortOrder)
+  }
+
   const submitDeleteUser = async () => {
-    if(await handleDeleteUser()){
-      await fetchUsers("", currentStatus , postsPerPage * (currentPage-1), postsPerPage ) 
+    if (await handleDeleteUser()) {
+      await fetchUsers("", currentStatus, postsPerPage * (currentPage - 1), postsPerPage, sortField, sortOrder)
     }
   }
 
@@ -101,20 +117,47 @@ export const MasterListView = () => {
     },
   ]
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10) 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postsPerPage] = useState(10)
+
+  // Add client-side sorting logic
+  const sortedUsers = [...users].sort((a, b) => {
+    // Handle nested fields like position.name
+    if (sortField === "position.name") {
+      const aValue = a.position?.name || ""
+      const bValue = b.position?.name || ""
+      return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
+    }
+
+    // Handle date fields
+    if (sortField === "createdAt") {
+      const aDate = new Date(a.createdAt)
+      const bDate = new Date(b.createdAt)
+      return sortOrder === "asc" ? aDate - bDate : bDate - aDate
+    }
+
+    // Handle regular fields
+    const aValue = a[sortField] || ""
+    const bValue = b[sortField] || ""
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
+    }
+
+    return sortOrder === "asc" ? aValue - bValue : bValue - aValue
+  })
 
   const onNextPage = async () => {
-    if(users.length > postsPerPage) {
-      await fetchUsers("", currentStatus , postsPerPage * (currentPage-1), postsPerPage )
+    if (users.length > postsPerPage) {
+      await fetchUsers("", currentStatus, postsPerPage * currentPage, postsPerPage, sortField, sortOrder)
       setCurrentPage(currentPage + 1)
     }
   }
 
   const onPrevPage = async () => {
-    if(currentPage > 1){
-      await fetchUsers("",currentStatus, postsPerPage * (currentPage-1), postsPerPage )
-        setCurrentPage(currentPage - 1)
+    if (currentPage > 1) {
+      await fetchUsers("", currentStatus, postsPerPage * (currentPage - 2), postsPerPage, sortField, sortOrder)
+      setCurrentPage(currentPage - 1)
     }
   }
 
@@ -124,7 +167,7 @@ export const MasterListView = () => {
 
       <div className="master-list-content">
         <div className="master-list-header">
-          <h1 className="master-list-title">Teacher Master List</h1>
+          <h1 className="master-list-title">Candidate Master List</h1>
 
           <div className="search-filter-container">
             <Select
@@ -150,17 +193,32 @@ export const MasterListView = () => {
         {loader ? (
           <div className="loader-container">
             <div className="loader-spinner"></div>
-            <p className="loader-text">Loading Teacher data...</p>
+            <p className="loader-text">Loading Candidate data...</p>
           </div>
         ) : (
           <div className="table-container">
             <div className="table-header">
-              <h2 className="table-title">Teacher Records</h2>
-              <p className="table-subtitle">Manage and view detailed Teacher information</p>
+              <h2 className="table-title">Candidate Records</h2>
+              <p className="table-subtitle">Manage and view detailed Candidate information</p>
+              <div className="sort-controls">
+                <span className="sort-label">Sort by:</span>
+                <button
+                  className={`sort-button ${sortField === "createdAt" ? "active" : ""}`}
+                  onClick={() => handleSort("createdAt")}
+                >
+                  Date Created {sortField === "createdAt" && (sortOrder === "asc" ? "↑" : "↓")}
+                </button>
+                <button
+                  className={`sort-button ${sortField === "position.name" ? "active" : ""}`}
+                  onClick={() => handleSort("position.name")}
+                >
+                  Position {sortField === "position.name" && (sortOrder === "asc" ? "↑" : "↓")}
+                </button>
+              </div>
             </div>
 
             <div className="table-content">
-              <CustomeTable dataSource={users} column={columns} />
+              <CustomeTable dataSource={sortedUsers} column={columns} />
             </div>
 
             <div className="pagination-container">
@@ -199,7 +257,7 @@ export const MasterListView = () => {
         title={
           <div className="drawer-title">
             <UserOutlined />
-            <span>Teacher Details</span>
+            <span>Candidate Details</span>
           </div>
         }
         placement="right"
@@ -208,9 +266,9 @@ export const MasterListView = () => {
         className="student-detail-drawer"
       >
         <div className="student-info-card">
-          <div className="student-info-header">
+        <div className="student-info-header">
             <h3 className="student-info-title">Personal Information</h3>
-            <div className="student-badge">Teacher</div>
+            <div className="student-badge">Candidate</div>
           </div>
 
           <div className="student-info-content">
@@ -238,10 +296,30 @@ export const MasterListView = () => {
               <span className="student-info-label">Role:</span>
               <span className="student-role-badge">{userData.role}</span>
             </div>
+
+            <div className="student-info-row">
+              <span className="student-info-label">Position Type:</span>
+              <span className="student-role-badge">{userData?.position?.position || 'Not Set'}</span>
+            </div>
+
+            <div className="student-info-row">
+              <span className="student-info-label">Position:</span>
+              <span className="student-role-badge">{userData?.position?.name || 'Not Set'}</span>
+            </div>
+
+            <div className="student-info-row">
+              <span className="student-info-label">Gender:</span>
+              <span className="student-role-badge">{userData.gender || 'Not Set'}</span>
+            </div>
+
+            <div className="student-info-row">
+              <span className="student-info-label">Age Type:</span>
+              <span className="student-role-badge">{userData.age || 'Not Set'}</span>
+            </div>
           </div>
         </div>
 
-        <div className="student-status-card">
+        {/* <div className="student-status-card">
           <div className="student-status-header">
             <h3 className="student-status-title">Status History</h3>
             <div className="status-count-badge">{userData.status?.length || 0}</div>
@@ -269,7 +347,7 @@ export const MasterListView = () => {
               <p>No status records found</p>
             </div>
           )}
-        </div>
+        </div> */}
       </Drawer>
 
       <Modal
@@ -741,6 +819,81 @@ export const MasterListView = () => {
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+
+        /* Sort Controls */
+        .sort-controls {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .sort-label {
+          font-size: 14px;
+          color: #666;
+        }
+
+        .sort-button {
+          padding: 6px 12px;
+          background-color: #f0f4ff;
+          border: 1px solid #e0e0e0;
+          border-radius: 4px;
+          color: #666;
+          font-size: 13px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .sort-button:hover {
+          background-color: #e6ebff;
+          color: #5b6af9;
+        }
+
+        .sort-button.active {
+          background-color: #5b6af9;
+          color: white;
+          border-color: #5b6af9;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+          display: flex;
+          gap: 8px;
+        }
+
+        .view-button {
+          padding: 4px 12px;
+          background-color: #5b6af9;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 13px;
+          transition: all 0.2s;
+        }
+
+        .view-button:hover {
+          background-color: #4a59e8;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(91, 106, 249, 0.3);
+        }
+
+        .delete-button {
+          padding: 4px 12px;
+          background-color: #ff4d4f;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 13px;
+          transition: all 0.2s;
+        }
+
+        .delete-button:hover {
+          background-color: #cf1322;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(207, 19, 34, 0.3);
         }
       `}</style>
     </div>
