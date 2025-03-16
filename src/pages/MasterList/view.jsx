@@ -180,7 +180,7 @@ export const MasterListView = () => {
             />
 
             <Search
-              placeholder="Search students..."
+              placeholder="Search Applicant..."
               allowClear
               onSearch={onSearch}
               style={{ width: "220px" }}
@@ -223,7 +223,7 @@ export const MasterListView = () => {
 
             <div className="pagination-container">
               <p className="pagination-info">
-                Showing <span className="pagination-count">{users.length}</span> students
+                Showing <span className="pagination-count">{users.length}</span> Applicant
               </p>
 
               <div className="pagination-controls">

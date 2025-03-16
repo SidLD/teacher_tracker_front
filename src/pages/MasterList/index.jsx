@@ -60,14 +60,16 @@ const onClose = () => {
     setOpen(false);
   };
 
-  const fetchUsers = async (query, currentStatus, start, limit) => {
+  const fetchUsers = async (query, currentStatus, start, limit, sortField = null, sortOrder = null)=> {
     try {
       const payload = { 
         role: "TEACHER", 
         currentStatus: currentStatus, 
         search: query, 
         start, 
-        limit
+        limit,
+        sortField,
+        sortOrder
       }
 
       const result = await getUsers(payload)
@@ -132,7 +134,7 @@ const onClose = () => {
   }
 
   useEffect(() => {
-    fetchUsers("", null, 0, 10)
+    fetchUsers("", null, 0, 10, 'createdAt', 'desc')
     fetchCategory()
     setloader(false)
   }, [])
