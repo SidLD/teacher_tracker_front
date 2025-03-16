@@ -83,7 +83,7 @@ const onClose = () => {
           action: <div className='flex flex-row justify-center gap-3 mx-2'>
           <Button
             style={
-                    {width: "30%",
+                    {width: "100%",
                     color: 'black',
                     border: '1px solid green'
                 }

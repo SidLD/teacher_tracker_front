@@ -78,7 +78,7 @@ export default function DashboardView() {
 
   const studentColumns = [
     {
-      title: "Category",
+      title: "Position",
       index: "category",
       isShow: true,
     },
@@ -117,7 +117,7 @@ export default function DashboardView() {
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-gray-800">Teacher Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Applicant Dashboard</h1>
             <Button
               onClick={showModal}
               className="flex items-center h-auto gap-2 px-4 py-2 text-white transition-all duration-300 transform bg-blue-500 border-none rounded-md shadow-md hover:bg-blue-600 hover:shadow-lg hover:scale-105"
@@ -185,9 +185,9 @@ export default function DashboardView() {
             </Form.Item>
 
             <Form.Item
-              label="Category"
+              label="Position"
               name="categoryId"
-              rules={[{ required: true, message: "Please select Category" }]}
+              rules={[{ required: true, message: "Please select Position" }]}
             >
               <Select
                 style={{ width: "100%" }}
@@ -218,7 +218,7 @@ export default function DashboardView() {
             <div className="overflow-hidden bg-white border border-gray-200 shadow-md rounded-xl animate-slideRight">
               <div className="p-4 border-b border-gray-200 bg-blue-50">
                 <h2 className="text-lg font-semibold text-gray-700">Analytics Overview</h2>
-                <p className="text-sm text-gray-500">Candidate distribution by position</p>
+                <p className="text-sm text-gray-500">Applicant distribution by position</p>
               </div>
 
               <div className="flex flex-col md:flex-row">
@@ -239,17 +239,17 @@ export default function DashboardView() {
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-blue-50 hover:shadow-md">
-                      <p className="font-medium text-gray-700">Total Male Teachers:</p>
+                      <p className="font-medium text-gray-700">Total Male Applicants:</p>
                       <p className="text-lg font-bold text-blue-600">{studentsData.totalMale}</p>
                     </div>
 
                     <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-pink-50 hover:shadow-md">
-                      <p className="font-medium text-gray-700">Total Female Teachers:</p>
+                      <p className="font-medium text-gray-700">Total Female Applicants:</p>
                       <p className="text-lg font-bold text-pink-600">{studentsData.totalFemale}</p>
                     </div>
 
                     <div className="flex items-center justify-between p-3 transition-all duration-300 rounded-lg bg-purple-50 hover:shadow-md">
-                      <p className="font-medium text-gray-700">Total Teachers:</p>
+                      <p className="font-medium text-gray-700">Total Applicants:</p>
                       <p className="text-lg font-bold text-purple-600">{studentsData.totalTeachers}</p>
                     </div>
                   </div>
@@ -262,7 +262,7 @@ export default function DashboardView() {
               <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-700">Position Management</h2>
-                  <p className="text-sm text-gray-500">Manage Teacher Positions</p>
+                  <p className="text-sm text-gray-500">Manage Applicant Positions</p>
                 </div>
 
                 <Button
@@ -276,7 +276,7 @@ export default function DashboardView() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  Add Category
+                  Add Position
                 </Button>
               </div>
 
@@ -286,10 +286,10 @@ export default function DashboardView() {
                     <thead>
                       <tr className="bg-gray-50">
                         <th className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500">
-                          Category
+                          Position
                         </th>
                         <th className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500">
-                          Position
+                          Position Type
                         </th>
                         <th
                           className="px-4 py-3 text-sm font-semibold tracking-wider text-left text-gray-700 uppercase border-b-2 border-blue-500"
@@ -308,7 +308,7 @@ export default function DashboardView() {
                               <span
                                 className={`px-2 py-1 text-xs font-medium rounded-full ${category.position === "TEACHING" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
                               >
-                                {category.position}
+                                {category.position.replace('_', ' ')}
                               </span>
                             </td>
                             <td className="px-4 py-3">
@@ -372,7 +372,7 @@ export default function DashboardView() {
                   clipRule="evenodd"
                 />
               </svg>
-              Add New Category
+              Add New Position
             </div>
           }
           open={isModalOpen}
@@ -399,7 +399,7 @@ export default function DashboardView() {
               <Select.Option value="NON_TEACHING">NON_TEACHING</Select.Option>
             </Select>
 
-            <label className="block mb-2 text-sm font-medium text-gray-700">Category Name</label>
+            <label className="block mb-2 text-sm font-medium text-gray-700">Position Name</label>
             <Input onChange={handleNewCategoryChange} placeholder="Enter new category name" className="rounded-md" />
           </div>
         </Modal>
@@ -422,7 +422,7 @@ export default function DashboardView() {
                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                 />
               </svg>
-              Edit Category
+              Edit Position
             </div>
           }
           open={isEditModalOpen}
@@ -436,7 +436,7 @@ export default function DashboardView() {
           {editingCategory && (
             <div className="mt-4">
               <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-700">Category Name</label>
+                <label className="block mb-2 text-sm font-medium text-gray-700">Position Name</label>
                 <Input
                   value={editName}
                   onChange={handleEditNameChange}

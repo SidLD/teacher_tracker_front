@@ -167,7 +167,7 @@ export const MasterListView = () => {
 
       <div className="master-list-content">
         <div className="master-list-header">
-          <h1 className="master-list-title">Candidate Master List</h1>
+          <h1 className="master-list-title">Applicant Master List</h1>
 
           <div className="search-filter-container">
             <Select
@@ -193,13 +193,13 @@ export const MasterListView = () => {
         {loader ? (
           <div className="loader-container">
             <div className="loader-spinner"></div>
-            <p className="loader-text">Loading Candidate data...</p>
+            <p className="loader-text">Loading Applicant data...</p>
           </div>
         ) : (
           <div className="table-container">
             <div className="table-header">
-              <h2 className="table-title">Candidate Records</h2>
-              <p className="table-subtitle">Manage and view detailed Candidate information</p>
+              <h2 className="table-title">Applicant Records</h2>
+              <p className="table-subtitle">Manage and view detailed Applicant information</p>
               <div className="sort-controls">
                 <span className="sort-label">Sort by:</span>
                 <button
@@ -257,7 +257,7 @@ export const MasterListView = () => {
         title={
           <div className="drawer-title">
             <UserOutlined />
-            <span>Candidate Details</span>
+            <span>Applicant Details</span>
           </div>
         }
         placement="right"
@@ -268,7 +268,7 @@ export const MasterListView = () => {
         <div className="student-info-card">
         <div className="student-info-header">
             <h3 className="student-info-title">Personal Information</h3>
-            <div className="student-badge">Candidate</div>
+            <div className="student-badge">Applicant</div>
           </div>
 
           <div className="student-info-content">
@@ -290,11 +290,6 @@ export const MasterListView = () => {
             <div className="student-info-row">
               <span className="student-info-label">Last Name:</span>
               <span className="student-info-value">{userData.lastName}</span>
-            </div>
-
-            <div className="student-info-row">
-              <span className="student-info-label">Role:</span>
-              <span className="student-role-badge">{userData.role}</span>
             </div>
 
             <div className="student-info-row">
