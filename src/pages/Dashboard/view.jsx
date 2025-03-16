@@ -30,7 +30,7 @@ export default function DashboardView() {
     categories,
   } = useContext(PageContext)
 
-  const [selectedPosition, setSelectedPosition] = useState("PROF")
+  const [selectedPosition, setSelectedPosition] = useState("TEACHING")
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState(null)
   const [editPosition, setEditPosition] = useState("")
@@ -306,7 +306,7 @@ export default function DashboardView() {
                             <td className="px-4 py-3">{category.name}</td>
                             <td className="px-4 py-3">
                               <span
-                                className={`px-2 py-1 text-xs font-medium rounded-full ${category.position === "PROF" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
+                                className={`px-2 py-1 text-xs font-medium rounded-full ${category.position === "TEACHING" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
                               >
                                 {category.position}
                               </span>
@@ -395,8 +395,8 @@ export default function DashboardView() {
               value={selectedPosition}
               onChange={handlePositionChange}
             >
-              <Select.Option value="PROF">PROF</Select.Option>
-              <Select.Option value="NON-PROF">NON-PROF</Select.Option>
+              <Select.Option value="TEACHING">TEACHING</Select.Option>
+              <Select.Option value="NON_TEACHING">NON_TEACHING</Select.Option>
             </Select>
 
             <label className="block mb-2 text-sm font-medium text-gray-700">Category Name</label>
@@ -453,8 +453,8 @@ export default function DashboardView() {
                   value={editPosition}
                   onChange={handleEditPositionChange}
                 >
-                  <Select.Option value="PROF">PROF</Select.Option>
-                  <Select.Option value="NON-PROF">NON-PROF</Select.Option>
+                  <Select.Option value="TEACHING">TEACHING</Select.Option>
+                  <Select.Option value="NON_TEACHING">NON_TEACHING</Select.Option>
                 </Select>
               </div>
             </div>

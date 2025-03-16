@@ -68,7 +68,7 @@ const LoginView = () => {
 
             <div className="pt-4 text-center">
               <NavLink to={"/register"} className="font-medium text-green-600 transition-colors hover:text-green-800">
-                Don't have an account? Register
+                Apply
               </NavLink>
             </div>
           </div>

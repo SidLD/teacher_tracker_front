@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 function RegisterView() {
   const { handleSubmit, contextHolder, categories } = useContext(PageContext)
   const navigate = useNavigate()
-  const [categoryType, setCategoryType] = useState("PROF")
+  const [categoryType, setCategoryType] = useState("TEACHING")
   return (
     <div className="flex items-center justify-center w-full min-h-screen px-4 py-12 bg-gradient-to-br from-blue-50 to-green-50 sm:px-6 lg:px-8">
       {contextHolder}
@@ -79,9 +79,9 @@ function RegisterView() {
             ]}
             style={{ width: "100%" }}
           >
-            <Radio.Group onChange={(e) => setCategoryType(e.target.value)} defaultValue="PROF">
-              <Radio value="PROF">PROF</Radio>
-              <Radio value="NON-PROF">NON-PROF</Radio>
+            <Radio.Group onChange={(e) => setCategoryType(e.target.value)} defaultValue="TEACHING">
+              <Radio value="TEACHING">TEACHING</Radio>
+              <Radio value="NON_TEACHING">NON_TEACHING</Radio>
             </Radio.Group>
           </Form.Item>
 

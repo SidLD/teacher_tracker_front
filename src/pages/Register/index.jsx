@@ -36,7 +36,7 @@ export default function Register() {
         try {
           const data = await register(payload)
           if(data.data){
-            success("User Registered. Please Wait for Admin Approval")
+            success("User Registered")
             setTimeout(() => {
               window.location.href = "/login"
             }, 2000)
