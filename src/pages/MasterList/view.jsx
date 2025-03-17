@@ -2,7 +2,7 @@
 
 import { useContext, useState } from "react"
 import { PageContext } from "../../lib/PageContext"
-import { Drawer, Select, Input, Modal } from "antd"
+import { Drawer, Select, Input, Modal, Table } from "antd"
 import { CustomeTable } from "../../components/CustomeTable"
 import { SearchOutlined, LeftOutlined, RightOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons"
 
@@ -64,56 +64,63 @@ export const MasterListView = () => {
   const columns = [
     {
       title: "LastName",
-      index: "lastName",
-      isShow: true,
+      dataIndex: "lastName",
+      key: "lastName",
+      className: "column-lastname",
     },
     {
       title: "First Name",
-      index: "firstName",
-      isShow: true,
+      dataIndex: "firstName",
+      key: "firstName",
+      className: "column-firstname",
     },
     {
       title: "Middle Name",
-      index: "middleName",
-      isShow: true,
+      dataIndex: "middleName",
+      key: "middleName",
+      className: "column-middlename",
     },
     {
       title: "Position",
-      index: "position",
-      isShow: true,
+      dataIndex: "position",
+      key: "position",
+      className: "column-position",
     },
     {
       title: "Contact",
-      index: "contact",
-      isShow: true,
+      dataIndex: "contact",
+      key: "contact",
+      className: "column-contact",
     },
     {
       title: "Email",
-      index: "email",
-      isShow: true,
+      dataIndex: "email",
+      key: "email",
+      className: "column-email",
     },
     {
       title: "Action",
-      index: "action",
-      isShow: true,
+      dataIndex: "action",
+      key: "action",
+      className: "column-action",
     },
   ]
 
   const studentColumns = [
     {
       title: "Start Date",
-      index: "date",
-      isShow: true,
+      dataIndex: "date",
+      key: "date",
     },
     {
       title: "Category",
-      index: "category",
-      isShow: true,
+      dataIndex: "category",
+      key: "category",
     },
     {
       title: "Detail",
-      index: "detail",
-      isShow: true,
+      dataIndex: "detail",
+      key: "detail",
     },
   ]
 
@@ -218,7 +225,12 @@ export const MasterListView = () => {
             </div>
 
             <div className="table-content">
-              <CustomeTable dataSource={sortedUsers} column={columns} />
+              <Table
+                dataSource={sortedUsers.map((item, i) => ({ ...item, key: i }))}
+                columns={columns}
+                pagination={false}
+                className="responsive-table"
+              />
             </div>
 
             <div className="pagination-container">
@@ -266,16 +278,12 @@ export const MasterListView = () => {
         className="student-detail-drawer"
       >
         <div className="student-info-card">
-        <div className="student-info-header">
+          <div className="student-info-header">
             <h3 className="student-info-title">Personal Information</h3>
             <div className="student-badge">Applicant</div>
           </div>
 
           <div className="student-info-content">
-            <div className="student-info-row">
-              <span className="student-info-label">School ID:</span>
-              <span className="student-info-value">{userData.schoolId}</span>
-            </div>
 
             <div className="student-info-row">
               <span className="student-info-label">First Name:</span>
@@ -294,22 +302,22 @@ export const MasterListView = () => {
 
             <div className="student-info-row">
               <span className="student-info-label">Position Type:</span>
-              <span className="student-role-badge">{userData?.position?.position.replace('_', ' ') || 'Not Set'}</span>
+              <span className="student-role-badge">{userData?.position?.position.replace("_", " ") || "Not Set"}</span>
             </div>
 
             <div className="student-info-row">
               <span className="student-info-label">Position:</span>
-              <span className="student-role-badge">{userData?.position?.name || 'Not Set'}</span>
+              <span className="student-role-badge">{userData?.position?.name || "Not Set"}</span>
             </div>
 
             <div className="student-info-row">
               <span className="student-info-label">Gender:</span>
-              <span className="student-role-badge">{userData.gender || 'Not Set'}</span>
+              <span className="student-role-badge">{userData.gender || "Not Set"}</span>
             </div>
 
             <div className="student-info-row">
               <span className="student-info-label">Age:</span>
-              <span className="student-role-badge">{userData.age || 'Not Set'}</span>
+              <span className="student-role-badge">{userData.age || "Not Set"}</span>
             </div>
           </div>
         </div>
@@ -322,8 +330,8 @@ export const MasterListView = () => {
 
           {userData.status && userData.status.length > 0 ? (
             <div className="student-status-table">
-              <CustomeTable
-                column={studentColumns}
+              <Table
+                columns={studentColumns}
                 dataSource={userData.status.map((s, index) => ({
                   key: index,
                   date: (
@@ -334,6 +342,7 @@ export const MasterListView = () => {
                   category: <div className="category-badge">{s.category.name}</div>,
                   detail: <p className="status-detail">{s.detail}</p>,
                 }))}
+                pagination={false}
               />
             </div>
           ) : (
@@ -377,21 +386,29 @@ export const MasterListView = () => {
         .master-list-container {
           min-height: 100vh;
           background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-          padding: 24px;
+          padding: 16px;
           animation: fadeIn 0.5s ease-out;
+          width: 100%;
+          overflow-x: hidden;
         }
-        
+
+        @media (min-width: 768px) {
+          .master-list-container {
+            padding: 24px;
+          }
+        }
+
         /* Header Styles */
         .master-list-content {
           margin-bottom: 24px;
         }
-        
+
         .master-list-header {
           display: flex;
           flex-direction: column;
           margin-bottom: 24px;
         }
-        
+
         @media (min-width: 768px) {
           .master-list-header {
             flex-direction: row;
@@ -399,20 +416,21 @@ export const MasterListView = () => {
             align-items: center;
           }
         }
-        
+
         .master-list-title {
-          font-size: 24px;
+          font-size: 20px;
           font-weight: 700;
           color: #333;
           margin-bottom: 16px;
         }
-        
+
         @media (min-width: 768px) {
           .master-list-title {
+            font-size: 24px;
             margin-bottom: 0;
           }
         }
-        
+
         /* Search and Filter */
         .search-filter-container {
           display: flex;
@@ -420,38 +438,56 @@ export const MasterListView = () => {
           gap: 12px;
           width: 100%;
         }
-        
+
         @media (min-width: 640px) {
           .search-filter-container {
             flex-direction: row;
             width: auto;
           }
         }
-        
+
+        .category-filter {
+          width: 100% !important;
+        }
+
+        .student-search {
+          width: 100% !important;
+        }
+
+        @media (min-width: 640px) {
+          .category-filter {
+            width: 180px !important;
+          }
+          
+          .student-search {
+            width: 220px !important;
+          }
+        }
+
         .category-filter .ant-select-selector {
           border-radius: 6px !important;
           transition: all 0.3s !important;
         }
-        
+
         .category-filter.ant-select-focused .ant-select-selector {
           border-color: #5b6af9 !important;
           box-shadow: 0 0 0 2px rgba(91, 106, 249, 0.2) !important;
         }
-        
+
         .student-search .ant-input-affix-wrapper {
           border-radius: 6px !important;
           transition: all 0.3s !important;
         }
-        
+
         .student-search .ant-input-affix-wrapper-focused {
           border-color: #5b6af9 !important;
           box-shadow: 0 0 0 2px rgba(91, 106, 249, 0.2) !important;
         }
-        
+
         .search-icon {
           color: #aaa;
         }
-        
+
         /* Loader */
         .loader-container {
           display: flex;
@@ -460,7 +496,7 @@ export const MasterListView = () => {
           justify-content: center;
           padding: 48px 0;
         }
-        
+
         .loader-spinner {
           width: 40px;
           height: 40px;
@@ -470,11 +506,11 @@ export const MasterListView = () => {
           margin-bottom: 16px;
           animation: spin 1s linear infinite;
         }
-        
+
         .loader-text {
           color: #666;
         }
-        
+
         /* Table Container */
         .table-container {
           background-color: white;
@@ -483,57 +519,112 @@ export const MasterListView = () => {
           overflow: hidden;
           border: 1px solid #e0e0e0;
           animation: slideUp 0.6s ease-out;
+          width: 100%;
+          overflow-x: auto;
         }
-        
+
         .table-header {
           padding: 16px;
           background-color: #f0f4ff;
           border-bottom: 1px solid #e0e0e0;
         }
-        
+
         .table-title {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 600;
           color: #333;
           margin: 0 0 4px 0;
         }
-        
+
+        @media (min-width: 768px) {
+          .table-title {
+            font-size: 18px;
+          }
+        }
+
         .table-subtitle {
-          font-size: 14px;
+          font-size: 13px;
           color: #666;
           margin: 0;
         }
-        
-        .table-content {
-          overflow: hidden;
+
+        @media (min-width: 768px) {
+          .table-subtitle {
+            font-size: 14px;
+          }
         }
-        
+
+        .table-content {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Make the table responsive */
+        .table-content :global(.ant-table-container) {
+          overflow-x: auto;
+        }
+
+        .table-content :global(.ant-table) {
+          min-width: 650px;
+        }
+
+        /* Responsive table columns - hide specific columns on mobile */
+        @media (max-width: 767px) {
+          .table-content :global(.column-middlename),
+          .table-content :global(.column-contact),
+          .table-content :global(.column-email) {
+            display: none !important;
+          }
+        }
+
         /* Pagination */
         .pagination-container {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: column;
+          gap: 16px;
           padding: 16px;
           border-top: 1px solid #e0e0e0;
           background-color: #f9f9f9;
         }
-        
+
+        @media (min-width: 640px) {
+          .pagination-container {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+
         .pagination-info {
           font-size: 14px;
           color: #666;
           margin: 0;
+          text-align: center;
         }
-        
+
+        @media (min-width: 640px) {
+          .pagination-info {
+            text-align: left;
+          }
+        }
+
         .pagination-count {
           font-weight: 600;
         }
-        
+
         .pagination-controls {
           display: flex;
           align-items: center;
           gap: 8px;
+          justify-content: center;
         }
-        
+
+        @media (min-width: 640px) {
+          .pagination-controls {
+            justify-content: flex-end;
+          }
+        }
+
         .pagination-button {
           display: flex;
           align-items: center;
@@ -547,27 +638,28 @@ export const MasterListView = () => {
           cursor: pointer;
           transition: all 0.3s;
           box-shadow: 0 2px 4px rgba(91, 106, 249, 0.3);
+          -webkit-tap-highlight-color: transparent;
         }
-        
+
         .pagination-button:hover {
           background-color: #4a59e8;
           transform: translateY(-2px);
           box-shadow: 0 4px 8px rgba(91, 106, 249, 0.4);
         }
-        
+
         .pagination-button-disabled {
           background-color: #e0e0e0;
           color: #999;
           cursor: not-allowed;
           box-shadow: none;
         }
-        
+
         .pagination-button-disabled:hover {
           background-color: #e0e0e0;
           transform: none;
           box-shadow: none;
         }
-        
+
         .pagination-current {
           display: flex;
           align-items: center;
@@ -581,7 +673,7 @@ export const MasterListView = () => {
           font-weight: 600;
           border: 1px solid #e0e0e0;
         }
-        
+
         /* Drawer Styles */
         .drawer-title {
           display: flex;
@@ -589,20 +681,23 @@ export const MasterListView = () => {
           gap: 8px;
           color: #5b6af9;
         }
-        
-        .student-detail-drawer .ant-drawer-content-wrapper {
+
+        .student-detail-drawer :global(.ant-drawer-content-wrapper) {
+          width: 90% !important;
+          max-width: 520px !important;
           box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
         }
-        
-        .student-detail-drawer .ant-drawer-header {
+
+        .student-detail-drawer :global(.ant-drawer-header) {
           border-bottom: 2px solid #e0e0e0;
+          padding: 12px 16px;
         }
-        
-        .student-detail-drawer .ant-drawer-body {
+
+        .student-detail-drawer :global(.ant-drawer-body) {
           padding: 16px;
           background-color: #f9fafb;
         }
-        
+
         /* Student Info Card */
         .student-info-card {
           background-color: white;
@@ -612,22 +707,36 @@ export const MasterListView = () => {
           border: 1px solid #e0e0e0;
           animation: fadeIn 0.5s ease-out;
         }
-        
+
         .student-info-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px;
+          padding: 12px 16px;
           border-bottom: 1px solid #e0e0e0;
+          flex-wrap: wrap;
+          gap: 8px;
         }
-        
+
+        @media (min-width: 480px) {
+          .student-info-header {
+            padding: 16px;
+          }
+        }
+
         .student-info-title {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 600;
           color: #333;
           margin: 0;
         }
-        
+
+        @media (min-width: 480px) {
+          .student-info-title {
+            font-size: 18px;
+          }
+        }
+
         .student-badge {
           padding: 4px 12px;
           background-color: #5b6af9;
@@ -636,32 +745,47 @@ export const MasterListView = () => {
           font-size: 12px;
           font-weight: 500;
         }
-        
+
         .student-info-content {
           padding: 16px;
         }
-        
+
         .student-info-row {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: column;
           padding: 8px 0;
           border-bottom: 1px solid #f0f0f0;
         }
-        
+
+        @media (min-width: 480px) {
+          .student-info-row {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+
         .student-info-row:last-child {
           border-bottom: none;
         }
-        
+
         .student-info-label {
           color: #666;
+          font-weight: 500;
+          margin-bottom: 4px;
         }
-        
+
+        @media (min-width: 480px) {
+          .student-info-label {
+            margin-bottom: 0;
+          }
+        }
+
         .student-info-value {
           font-weight: 500;
           color: #333;
         }
-        
+
         .student-role-badge {
           text-transform: uppercase;
           font-weight: 600;
@@ -670,8 +794,9 @@ export const MasterListView = () => {
           color: #5b6af9;
           border-radius: 16px;
           font-size: 12px;
+          display: inline-block;
         }
-        
+
         /* Status Card */
         .student-status-card {
           background-color: white;
@@ -680,22 +805,34 @@ export const MasterListView = () => {
           border: 1px solid #e0e0e0;
           animation: fadeIn 0.5s ease-out;
         }
-        
+
         .student-status-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px;
+          padding: 12px 16px;
           border-bottom: 1px solid #e0e0e0;
         }
-        
+
+        @media (min-width: 480px) {
+          .student-status-header {
+            padding: 16px;
+          }
+        }
+
         .student-status-title {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 600;
           color: #333;
           margin: 0;
         }
-        
+
+        @media (min-width: 480px) {
+          .student-status-title {
+            font-size: 18px;
+          }
+        }
+
         .status-count-badge {
           display: flex;
           align-items: center;
@@ -708,13 +845,13 @@ export const MasterListView = () => {
           font-size: 12px;
           font-weight: 600;
         }
-        
+
         .student-status-table {
-          overflow: hidden;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
           border-radius: 0 0 8px 8px;
-          border: 1px solid #e0e0e0;
         }
-        
+
         .date-badge {
           padding: 4px 8px;
           background-color: #e6f7ff;
@@ -723,7 +860,7 @@ export const MasterListView = () => {
           font-size: 12px;
           display: inline-block;
         }
-        
+
         .category-badge {
           padding: 4px 8px;
           background-color: #f9f0ff;
@@ -734,12 +871,12 @@ export const MasterListView = () => {
           text-transform: uppercase;
           display: inline-block;
         }
-        
+
         .status-detail {
           color: #333;
           margin: 0;
         }
-        
+
         .empty-status {
           display: flex;
           flex-direction: column;
@@ -748,7 +885,7 @@ export const MasterListView = () => {
           padding: 32px 0;
           color: #666;
         }
-        
+
         .empty-status-icon {
           display: flex;
           align-items: center;
@@ -762,7 +899,7 @@ export const MasterListView = () => {
           font-weight: 700;
           margin-bottom: 8px;
         }
-        
+
         /* Delete Modal */
         .delete-modal-title {
           display: flex;
@@ -770,7 +907,24 @@ export const MasterListView = () => {
           gap: 8px;
           color: #f5222d;
         }
-        
+
+        .delete-confirmation-modal :global(.ant-modal-content) {
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .delete-confirmation-modal :global(.ant-modal-header) {
+          padding: 12px 16px;
+        }
+
+        .delete-confirmation-modal :global(.ant-modal-body) {
+          padding: 16px;
+        }
+
+        .delete-confirmation-modal :global(.ant-modal-footer) {
+          padding: 12px 16px;
+        }
+
         .delete-warning {
           padding: 16px;
           background-color: #fff1f0;
@@ -778,66 +932,78 @@ export const MasterListView = () => {
           border-left: 4px solid #ff4d4f;
           margin-bottom: 16px;
         }
-        
+
         .delete-warning-title {
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 600;
           color: #cf1322;
           margin: 0 0 8px 0;
         }
-        
+
+        @media (min-width: 480px) {
+          .delete-warning-title {
+            font-size: 16px;
+          }
+        }
+
         .delete-warning-message {
           color: #f5222d;
           margin: 0;
+          font-size: 13px;
         }
-        
+
+        @media (min-width: 480px) {
+          .delete-warning-message {
+            font-size: 14px;
+          }
+        }
+
         .delete-confirm-button {
           background-color: #ff4d4f !important;
           border-color: #ff4d4f !important;
         }
-        
+
         .delete-cancel-button {
           border-color: #d9d9d9 !important;
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
         }
 
         /* Sort Controls */
         .sort-controls {
           display: flex;
+          flex-wrap: wrap;
           align-items: center;
           gap: 8px;
           margin-top: 12px;
         }
 
         .sort-label {
-          font-size: 14px;
+          font-size: 13px;
           color: #666;
         }
 
+        @media (min-width: 480px) {
+          .sort-label {
+            font-size: 14px;
+          }
+        }
+
         .sort-button {
-          padding: 6px 12px;
+          padding: 4px 8px;
           background-color: #f0f4ff;
           border: 1px solid #e0e0e0;
           border-radius: 4px;
           color: #666;
-          font-size: 13px;
+          font-size: 12px;
           cursor: pointer;
           transition: all 0.2s;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (min-width: 480px) {
+          .sort-button {
+            padding: 6px 12px;
+            font-size: 13px;
+          }
         }
 
         .sort-button:hover {
@@ -854,18 +1020,32 @@ export const MasterListView = () => {
         /* Action Buttons */
         .action-buttons {
           display: flex;
-          gap: 8px;
+          gap: 4px;
+        }
+
+        @media (min-width: 480px) {
+          .action-buttons {
+            gap: 8px;
+          }
         }
 
         .view-button {
-          padding: 4px 12px;
+          padding: 4px 8px;
           background-color: #5b6af9;
           color: white;
           border: none;
           border-radius: 4px;
           cursor: pointer;
-          font-size: 13px;
+          font-size: 12px;
           transition: all 0.2s;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (min-width: 480px) {
+          .view-button {
+            padding: 4px 12px;
+            font-size: 13px;
+          }
         }
 
         .view-button:hover {
@@ -875,20 +1055,73 @@ export const MasterListView = () => {
         }
 
         .delete-button {
-          padding: 4px 12px;
+          padding: 4px 8px;
           background-color: #ff4d4f;
           color: white;
           border: none;
           border-radius: 4px;
           cursor: pointer;
-          font-size: 13px;
+          font-size: 12px;
           transition: all 0.2s;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (min-width: 480px) {
+          .delete-button {
+            padding: 4px 12px;
+            font-size: 13px;
+          }
         }
 
         .delete-button:hover {
           background-color: #cf1322;
           transform: translateY(-1px);
           box-shadow: 0 2px 4px rgba(207, 19, 34, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        /* Fix for Ant Design table on mobile */
+        :global(.ant-table-content) {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        :global(.ant-table-cell) {
+          white-space: nowrap;
+        }
+
+        @media (max-width: 767px) {
+          :global(.ant-table-thead > tr > th),
+          :global(.ant-table-tbody > tr > td) {
+            padding: 8px 12px;
+          }
+        }
+
+        /* Make sure the table has proper layout */
+        :global(.ant-table) {
+          table-layout: fixed;
+        }
+
+        :global(.ant-table-thead > tr > th),
+        :global(.ant-table-tbody > tr > td) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       `}</style>
     </div>
