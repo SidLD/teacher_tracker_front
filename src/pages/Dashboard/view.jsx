@@ -228,8 +228,20 @@ export default function DashboardView() {
                       <CustomePieChart
                         labels={analysis.categories}
                         dataSource={analysis.studentsData}
-                        label="# of Teachers"
+                        label="Number of Candidate"
                       />
+                    </div>
+                  )}
+                </div>
+
+                <div className="w-full p-4 md:w-1/2">
+                  {analysis && (
+                      <div className="px-[30%] transition-transform duration-500 transform hover:scale-105">
+                     <CustomePieChart
+                     labels={['TEACHING', 'NON TEACHING']}
+                     dataSource={[analysis?.teaching || 0, analysis?.nonTeaching || 0]}
+                        label="Number of Candidate"
+                   />
                     </div>
                   )}
                 </div>
