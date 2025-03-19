@@ -31,6 +31,7 @@ export default function Register() {
           role: e.role,
           batch: e.batch,
           position: e.position,
+          birthDate: e.birthDate
         };
 
         try {

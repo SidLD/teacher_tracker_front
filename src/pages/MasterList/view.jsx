@@ -2,9 +2,16 @@
 
 import { useContext, useState } from "react"
 import { PageContext } from "../../lib/PageContext"
-import { Drawer, Select, Input, Modal, Table } from "antd"
-import { CustomeTable } from "../../components/CustomeTable"
-import { SearchOutlined, LeftOutlined, RightOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons"
+import { Drawer, Select, Input, Modal, Table, Button } from "antd"
+import {
+  SearchOutlined,
+  LeftOutlined,
+  RightOutlined,
+  DeleteOutlined,
+  UserOutlined,
+  FileExcelOutlined,
+} from "@ant-design/icons"
+import * as XLSX from "xlsx"
 
 export const MasterListView = () => {
   const {
@@ -61,7 +68,39 @@ export const MasterListView = () => {
     }
   }
 
+  const exportToExcel = () => {
+    // Prepare data for export
+    const exportData = sortedUsers.map((user) => ({
+      ID: user.employeeId || "",
+      "Last Name": user.lastName || "",
+      "First Name": user.firstName || "",
+      "Middle Name": user.middleName || "",
+      Position: user.position?.name || "",
+      Contact: user.contact || "",
+      Email: user.email || "",
+      Gender: user.gender || "",
+      Age: user.age || "",
+      "Birth Date": user.birthDate ? new Date(user.birthDate).toLocaleDateString() : "",
+    }))
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(exportData)
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Applicants")
+
+    // Generate Excel file
+    XLSX.writeFile(workbook, "Applicant_Master_List.xlsx")
+  }
+
   const columns = [
+    {
+      title: "ID",
+      dataIndex: "employeeId",
+      key: "employeeId",
+      className: "column-lastname",
+    },
     {
       title: "LastName",
       dataIndex: "lastName",
@@ -194,6 +233,10 @@ export const MasterListView = () => {
               className="student-search"
               prefix={<SearchOutlined className="search-icon" />}
             />
+
+            <Button type="primary" icon={<FileExcelOutlined />} onClick={exportToExcel} className="export-excel-button">
+              Export to Excel
+            </Button>
           </div>
         </div>
 
@@ -284,6 +327,10 @@ export const MasterListView = () => {
           </div>
 
           <div className="student-info-content">
+            <div className="student-info-row">
+              <span className="student-info-label">Employee ID:</span>
+              <span className="student-info-value">{userData.employeeId}</span>
+            </div>
 
             <div className="student-info-row">
               <span className="student-info-label">First Name:</span>
@@ -315,6 +362,10 @@ export const MasterListView = () => {
               <span className="student-role-badge">{userData.gender || "Not Set"}</span>
             </div>
 
+            <div className="student-info-row">
+              <span className="student-info-label">Birth Date:</span>
+              <span className="student-role-badge">{new Date(userData.birthDate).toDateString() || "Not Set"}</span>
+            </div>
             <div className="student-info-row">
               <span className="student-info-label">Age:</span>
               <span className="student-role-badge">{userData.age || "Not Set"}</span>
@@ -486,6 +537,24 @@ export const MasterListView = () => {
 
         .search-icon {
           color: #aaa;
+        }
+        
+        /* Export Excel Button */
+        .export-excel-button {
+          background-color: #52c41a !important;
+          border-color: #52c41a !important;
+          width: 100% !important;
+        }
+        
+        @media (min-width: 640px) {
+          .export-excel-button {
+            width: auto !important;
+          }
+        }
+        
+        .export-excel-button:hover {
+          background-color: #389e0d !important;
+          border-color: #389e0d !important;
         }
 
         /* Loader */

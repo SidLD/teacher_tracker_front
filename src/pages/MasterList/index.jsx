@@ -76,6 +76,7 @@ const onClose = () => {
       const tempUser = result.data.data.map((user, index) => {
         return {
           key: index,
+          employeeId: user.employeeId,
           position: user.position ? user.position.name : "Not Set",
           lastName: user.lastName,
           firstName: user.firstName,
