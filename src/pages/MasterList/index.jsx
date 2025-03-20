@@ -83,6 +83,7 @@ const onClose = () => {
           middleName: user.middleName,
           contact: user.contact,
           email: user.email,
+          birthDate: user.birthDate,
           action: <div className='flex flex-row justify-center gap-3 mx-2'>
           <Button
             style={

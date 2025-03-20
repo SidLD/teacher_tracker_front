@@ -75,7 +75,7 @@ export const MasterListView = () => {
       "Last Name": user.lastName || "",
       "First Name": user.firstName || "",
       "Middle Name": user.middleName || "",
-      Position: user.position?.name || "",
+      Position: user.position || "",
       Contact: user.contact || "",
       Email: user.email || "",
       Gender: user.gender || "",
@@ -99,49 +99,57 @@ export const MasterListView = () => {
       title: "ID",
       dataIndex: "employeeId",
       key: "employeeId",
-      className: "column-lastname",
+      className: "column-id",
+      width: 80,
     },
     {
-      title: "LastName",
+      title: "Last Name",
       dataIndex: "lastName",
       key: "lastName",
       className: "column-lastname",
+      width: 120,
     },
     {
       title: "First Name",
       dataIndex: "firstName",
       key: "firstName",
       className: "column-firstname",
+      width: 120,
     },
     {
       title: "Middle Name",
       dataIndex: "middleName",
       key: "middleName",
       className: "column-middlename",
+      width: 120,
     },
     {
       title: "Position",
       dataIndex: "position",
       key: "position",
       className: "column-position",
+      width: 150,
     },
     {
       title: "Contact",
       dataIndex: "contact",
       key: "contact",
       className: "column-contact",
+      width: 120,
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       className: "column-email",
+      width: 180,
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
       className: "column-action",
+      width: 100,
     },
   ]
 
@@ -273,6 +281,8 @@ export const MasterListView = () => {
                 columns={columns}
                 pagination={false}
                 className="responsive-table"
+                scroll={{ x: "max-content" }}
+                bordered
               />
             </div>
 
@@ -1191,6 +1201,51 @@ export const MasterListView = () => {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+        }
+
+        /* Column width adjustments */
+        :global(.column-id) {
+          min-width: 80px;
+          max-width: 80px;
+        }
+        
+        :global(.column-lastname),
+        :global(.column-firstname),
+        :global(.column-middlename),
+        :global(.column-contact) {
+          min-width: 120px;
+          max-width: 120px;
+        }
+        
+        :global(.column-position) {
+          min-width: 150px;
+          max-width: 150px;
+        }
+        
+        :global(.column-email) {
+          min-width: 180px;
+          max-width: 180px;
+        }
+        
+        :global(.column-action) {
+          min-width: 100px;
+          max-width: 100px;
+        }
+        
+        /* Improve text overflow handling */
+        :global(.ant-table-cell) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        /* Add hover effect to see full content */
+        :global(.ant-table-cell:hover) {
+          overflow: visible;
+          white-space: normal;
+          z-index: 1;
+          position: relative;
+          background-color: #f5f5f5;
         }
       `}</style>
     </div>

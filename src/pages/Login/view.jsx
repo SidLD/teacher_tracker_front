@@ -4,7 +4,7 @@ import { useContext, useState } from "react"
 import { PageContext } from "../../lib/PageContext"
 import { Button, Form, Input } from "antd"
 import { NavLink } from "react-router-dom"
-
+import bg from '../../assets/logoBackground.jpeg';
 const LoginView = () => {
   const { handleSubmit, contextHolder } = useContext(PageContext)
   const [submit, setSubmit] = useState(true)
@@ -13,10 +13,18 @@ const LoginView = () => {
     await handleSubmit(e)
     setSubmit(true)
   }
+
   return (
-    <div className="flex items-center justify-center w-full min-h-screen p-4 bg-gradient-to-br from-green-50 to-green-100">
+    <div className="relative flex items-center justify-center w-full min-h-screen p-4">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <img src={bg} alt="Background" fill priority className="object-cover" />
+        {/* Overlay to ensure text is readable */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50/80 to-green-100/80" />
+      </div>
+
       {contextHolder}
-      <div className="w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-green-800">Welcome Back</h1>
           <p className="text-green-600">Sign in to your account</p>
