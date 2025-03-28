@@ -3,7 +3,7 @@ import { PageContext } from '../../lib/PageContext'
 import { MasterListView } from './view'
 import { getCategory, getUser, getUserStatus, getUsers , deleteUser as deleteUserAPI} from '../../lib/api'
 import { Button, message } from 'antd'
-
+import { format } from 'date-fns';
 export const MasterList = () => {
   const [users, setUsers] = useState([])
   const [open, setOpen] = useState(false);
@@ -81,6 +81,7 @@ const onClose = () => {
           lastName: user.lastName,
           firstName: user.firstName,
           middleName: user.middleName,
+          createdAt: format(new Date(user.createdAt), 'MMM d, yyyy h:mm aaa'),
           contact: user.contact,
           email: user.email,
           birthDate: user.birthDate,
@@ -113,6 +114,7 @@ const onClose = () => {
       })
       setUsers(tempUser)
     } catch (error) {
+      console.log(error)
       setUsers([])
     }
   }

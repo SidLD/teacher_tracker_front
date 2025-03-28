@@ -12,6 +12,7 @@ import {
   FileExcelOutlined,
 } from "@ant-design/icons"
 import * as XLSX from "xlsx"
+import { format } from 'date-fns';
 
 export const MasterListView = () => {
   const {
@@ -100,33 +101,40 @@ export const MasterListView = () => {
       dataIndex: "employeeId",
       key: "employeeId",
       className: "column-id",
-      width: 80,
+      width: 30,
     },
     {
       title: "Last Name",
       dataIndex: "lastName",
       key: "lastName",
       className: "column-lastname",
-      width: 120,
+      width: 80,
     },
     {
       title: "First Name",
       dataIndex: "firstName",
       key: "firstName",
       className: "column-firstname",
-      width: 120,
+      width: 80,
     },
     {
       title: "Middle Name",
       dataIndex: "middleName",
       key: "middleName",
       className: "column-middlename",
-      width: 120,
+      width: 80,
     },
     {
       title: "Position",
       dataIndex: "position",
       key: "position",
+      className: "column-position",
+      width: 150,
+    },
+    {
+      title: "Application Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
       className: "column-position",
       width: 150,
     },
@@ -290,7 +298,7 @@ export const MasterListView = () => {
               <p className="pagination-info">
                 Showing <span className="pagination-count">{users.length}</span> Applicant
               </p>
-
+{/* 
               <div className="pagination-controls">
                 <button
                   onClick={onPrevPage}
@@ -311,7 +319,7 @@ export const MasterListView = () => {
                 >
                   <RightOutlined />
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         )}
@@ -365,6 +373,11 @@ export const MasterListView = () => {
             <div className="student-info-row">
               <span className="student-info-label">Position:</span>
               <span className="student-role-badge">{userData?.position?.name || "Not Set"}</span>
+            </div>
+
+            <div className="student-info-row">
+              <span className="student-info-label">Application Date:</span>
+              <span className="student-role-badge">{format(new Date(userData?.createdAt), 'MMM d, yyyy h:mm aaa')}</span>
             </div>
 
             <div className="student-info-row">
