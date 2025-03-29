@@ -81,7 +81,7 @@ const onClose = () => {
           lastName: user.lastName,
           firstName: user.firstName,
           middleName: user.middleName,
-          createdAt: format(new Date(user.createdAt), 'MMM d, yyyy h:mm aaa'),
+          createdAt: user?.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy h:mm aaa') : "",
           contact: user.contact,
           email: user.email,
           birthDate: user.birthDate,

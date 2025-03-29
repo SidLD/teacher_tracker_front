@@ -377,7 +377,7 @@ export const MasterListView = () => {
 
             <div className="student-info-row">
               <span className="student-info-label">Application Date:</span>
-              <span className="student-role-badge">{format(new Date(userData?.createdAt), 'MMM d, yyyy h:mm aaa')}</span>
+              <span className="student-role-badge">{ userData?.createdAt ? format(new Date(userData?.createdAt), 'MMM d, yyyy h:mm aaa') : ''}</span>
             </div>
 
             <div className="student-info-row">
