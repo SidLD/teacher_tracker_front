@@ -3,16 +3,10 @@
 import { useContext, useState } from "react"
 import { PageContext } from "../../lib/PageContext"
 import { Drawer, Select, Input, Modal, Table, Button } from "antd"
-import {
-  SearchOutlined,
-  LeftOutlined,
-  RightOutlined,
-  DeleteOutlined,
-  UserOutlined,
-  FileExcelOutlined,
-} from "@ant-design/icons"
+import { SearchOutlined, DeleteOutlined, UserOutlined, FileExcelOutlined, PrinterOutlined } from "@ant-design/icons"
 import * as XLSX from "xlsx"
-import { format } from 'date-fns';
+import { format } from "date-fns"
+import { jsPDF } from "jspdf"
 
 export const MasterListView = () => {
   const {
@@ -73,9 +67,7 @@ export const MasterListView = () => {
     // Prepare data for export
     const exportData = sortedUsers.map((user) => ({
       ID: user.employeeId || "",
-      "Last Name": user.lastName || "",
-      "First Name": user.firstName || "",
-      "Middle Name": user.middleName || "",
+      Name: user.name || "",
       Position: user.position || "",
       Contact: user.contact || "",
       Email: user.email || "",
@@ -95,6 +87,68 @@ export const MasterListView = () => {
     XLSX.writeFile(workbook, "Applicant_Master_List.xlsx")
   }
 
+  const printUserDetailsPDF = () => {
+    const doc = new jsPDF()
+
+    // Add title
+    doc.setFontSize(18)
+    doc.setFont("helvetica", "bold")
+    doc.text("Applicant Details", 105, 20, { align: "center" })
+
+    // Add applicant information
+    doc.setFontSize(12)
+    doc.setFont("helvetica", "normal")
+
+    const startY = 40
+    const lineHeight = 10
+    let currentY = startY
+
+    // Personal Information Section
+    doc.setFont("helvetica", "bold")
+    doc.text("Personal Information", 20, currentY)
+    currentY += lineHeight + 5
+
+    doc.setFont("helvetica", "normal")
+    doc.text(`Employee ID: ${userData.employeeId || "N/A"}`, 20, currentY)
+    currentY += lineHeight
+
+    doc.text(`Name: ${userData.firstName || ""} ${userData.middleName || ""} ${userData.lastName || ""}`, 20, currentY)
+    currentY += lineHeight
+
+    doc.text(`Position Type: ${userData?.position?.position?.replace("_", " ") || "Not Set"}`, 20, currentY)
+    currentY += lineHeight
+
+    doc.text(`Position: ${userData?.position?.name || "Not Set"}`, 20, currentY)
+    currentY += lineHeight
+
+    doc.text(
+      `Application Date: ${userData?.createdAt ? format(new Date(userData?.createdAt), "MMM d, yyyy h:mm aaa") : "N/A"}`,
+      20,
+      currentY,
+    )
+    currentY += lineHeight
+
+    doc.text(`Gender: ${userData.gender || "Not Set"}`, 20, currentY)
+    currentY += lineHeight
+
+    doc.text(
+      `Birth Date: ${userData.birthDate ? new Date(userData.birthDate).toDateString() : "Not Set"}`,
+      20,
+      currentY,
+    )
+    currentY += lineHeight
+
+    doc.text(`Age: ${userData.age || "Not Set"}`, 20, currentY)
+    currentY += lineHeight
+
+    // Add footer
+    doc.setFontSize(10)
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 280)
+
+    // Save the PDF
+    doc.save(`Applicant_${userData.employeeId || "Details"}.pdf`)
+  }
+
   const columns = [
     {
       title: "ID",
@@ -104,25 +158,11 @@ export const MasterListView = () => {
       width: 30,
     },
     {
-      title: "Last Name",
-      dataIndex: "lastName",
-      key: "lastName",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
       className: "column-lastname",
-      width: 80,
-    },
-    {
-      title: "First Name",
-      dataIndex: "firstName",
-      key: "firstName",
-      className: "column-firstname",
-      width: 80,
-    },
-    {
-      title: "Middle Name",
-      dataIndex: "middleName",
-      key: "middleName",
-      className: "column-middlename",
-      width: 80,
+      width: 200,
     },
     {
       title: "Position",
@@ -298,7 +338,7 @@ export const MasterListView = () => {
               <p className="pagination-info">
                 Showing <span className="pagination-count">{users.length}</span> Applicant
               </p>
-{/* 
+              {/* 
               <div className="pagination-controls">
                 <button
                   onClick={onPrevPage}
@@ -341,7 +381,17 @@ export const MasterListView = () => {
         <div className="student-info-card">
           <div className="student-info-header">
             <h3 className="student-info-title">Personal Information</h3>
-            <div className="student-badge">Applicant</div>
+            <div className="student-actions">
+              <Button
+                type="primary"
+                icon={<PrinterOutlined />}
+                onClick={printUserDetailsPDF}
+                className="print-pdf-button"
+              >
+                Print PDF
+              </Button>
+              <div className="student-badge">Applicant</div>
+            </div>
           </div>
 
           <div className="student-info-content">
@@ -377,7 +427,9 @@ export const MasterListView = () => {
 
             <div className="student-info-row">
               <span className="student-info-label">Application Date:</span>
-              <span className="student-role-badge">{ userData?.createdAt ? format(new Date(userData?.createdAt), 'MMM d, yyyy h:mm aaa') : ''}</span>
+              <span className="student-role-badge">
+                {userData?.createdAt ? format(new Date(userData?.createdAt), "MMM d, yyyy h:mm aaa") : ""}
+              </span>
             </div>
 
             <div className="student-info-row">
@@ -1260,8 +1312,40 @@ export const MasterListView = () => {
           position: relative;
           background-color: #f5f5f5;
         }
+
+        /* Print PDF Button */
+        .student-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .print-pdf-button {
+          background-color: #1890ff !important;
+          border-color: #1890ff !important;
+          display: flex;
+          align-items: center;
+        }
+
+        .print-pdf-button:hover {
+          background-color: #096dd9 !important;
+          border-color: #096dd9 !important;
+        }
+
+        @media (max-width: 480px) {
+          .student-info-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          
+          .student-actions {
+            margin-top: 8px;
+            width: 100%;
+            justify-content: space-between;
+          }
+        }
       `}</style>
     </div>
   )
 }
-
